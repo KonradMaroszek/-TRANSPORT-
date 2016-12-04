@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;Database.FetchLogins&apos; to &apos;FetchQuery&apos;&#x0D;&#x0A;- Original project: &apos;AplikacjaTransportowa&apos;&#x0D;&#x0A;- Original element: &apos;Database.FetchLogins&apos;&#x0D;&#x0A;- Renamed element: &apos;Database.FetchQuery&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;FetchLogins&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;Database{FetchLogins.java[FetchLogins" matchStrategy="1" name="FetchQuery" qualified="false" references="true" similarDeclarations="false" stamp="1480803586456" textual="false" version="1.0"/>
+</session>
