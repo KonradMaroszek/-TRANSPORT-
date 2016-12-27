@@ -22,3 +22,5 @@
 2016-12-14 10:34:21,454 [Stop Help Server] INFO  o.e.jetty.server.AbstractConnector - Stopped ServerConnector@18d477b1{HTTP/1.1,[http/1.1]}{127.0.0.1:0}
 2016-12-14 10:34:21,470 [Stop Help Server] INFO  o.e.j.server.handler.ContextHandler - Stopped o.e.j.s.ServletContextHandler@6814effd{/help,null,UNAVAILABLE}
 2016-12-15 10:11:20,543 [Worker-1] INFO  c.g.t.t.d.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2016-12-25 21:07:09,524 [Worker-0] INFO  c.g.t.t.d.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2016-12-27 12:00:31,937 [Worker-1] INFO  c.g.t.t.d.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.

@@ -19,6 +19,9 @@ import javax.swing.JTextField;
 import javax.swing.JSpinner;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
+
+import Database.DatabaseConnection;
+import Database.Execute_command;
 import Database.FetchQuery;
 import javax.swing.JDesktopPane;
 import java.awt.GridBagLayout;
@@ -115,6 +118,8 @@ public class MainWindow {
 	private JTextField VehiclesInformationTextOil;
 	private JTextField VehiclesInformationTextMilage;
 	private JTable table;
+	private Choice EmployessPersonalDataChoiceConctractOfEmployment;
+	
 	private JTable table_1;
 	private JTable InstytutionEmployeesTable;
 	private JTextField InstytutionMainTextCountry;
@@ -266,10 +271,136 @@ public class MainWindow {
 		});
 		JButton btnDodaj = new JButton("dodaj pracownika");
 		btnDodaj.setBounds(888, 124, 171, 23);
+		btnDodaj.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String imie = EmployessPersonalDataTextName.getText();
+				String nazwisko = EmployessPersonalDataTextSurname.getText();
+				String drugie_imie = EmployessPersonalDataTextSecondName.getText();
+				String data_ur = EmployessPersonalDataTextDateOfBirth.getText();
+				String wiek = EmployessPersonalDataTextAge.getText();
+				String nr_tel = EmployessPersonalDataTextPhoneNumberOne.getText();
+				String pesel = EmployessPersonalDataTextPeselNumber.getText();
+				String nr_dowodu = EmployessPersonalDataTextEvidenceNumber.getText();
+				String ulica = EmployessPersonalDataTextStreet.getText();
+				String nr_lokalu = EmployessPersonalDataTextLocalNumber.getText();
+				String kod_pocztowy = EmployessPersonalDataTextPostalCode.getText();
+				String miasto = EmployessPersonalDataTextCity.getText();
+				String wojewodztwo = EmployessPersonalDataTextLand.getText();
+				String kraj = EmployessPersonalDataTextCountry.getText();
+				String adres_pracy = EmployessPersonalDataTextWorkplaceAddress.getText();
+				String typ_umowy = EmployessPersonalDataChoiceConctractOfEmployment.getSelectedItem().toString();
+				String check_existing_cmd = "select * from dane_osobowe join pracownicy " +
+						                    "on dane_osobowe.daneid = pracownicy.id_danych_osobowych join adres" +
+									   	    " on pracownicy.ID_ADRESU = adres.adresid where " +
+						                    "dane_osobowe.imie = '"+imie+"' and dane_osobowe.nazwisko = '"+nazwisko+"' and dane_osobowe.pesel = '"+pesel+"'";
+				Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(check_existing_cmd);
+				int size = 0;
+				try {
+					size = result.get().size();
+				} catch (InterruptedException e2) {
+					// TODO Auto-generated catch block
+					size = 0;
+				} catch (ExecutionException e2) {
+					// TODO Auto-generated catch block
+					size = 0;
+				}
+				if (!(size > 0))
+				{
+					String adr_id, building_id, car_id, worker_id, data_id;
+					adr_id = building_id = car_id = worker_id = data_id = "";
+					try {
+						adr_id = get_adr_id().get().get(0).get("nextval").toString();
+						worker_id = get_worker_id().get().get(0).get("nextval").toString();
+						data_id = get_data_id().get().get(0).get("nextval").toString();
+						String get_building_cmd ="Select * from budynki join adres on budynki.id_adresu = adres.adresid where ";
+						get_building_cmd += "ulica = '"+adres_pracy.split(" ")[0]+"' and nr_lokalu = "+adres_pracy.split(" ")[1];
+						Future<ArrayList<Map<String, Object>>> building = executeCommandAndWaitForOutput(get_building_cmd);
+						building_id = building.get().get(0).get("budynkiid").toString();
+						car_id = "1";
+						
+
+						
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						System.out.println("Couldnt add employee");
+					} catch (ExecutionException e1) {
+						// TODO Auto-generated catch block
+						System.out.println("Couldnt add employee");
+					}
+					String insert_worker_cmd = get_insert_worker_cmd(typ_umowy, adr_id, building_id, car_id, worker_id,
+							data_id);
+					String insert_adres_cmd = get_insert_adres_cmd(ulica, nr_lokalu, kod_pocztowy, miasto, wojewodztwo,
+							kraj, adr_id);
+					String insert_data_cmd = get_insert_data_cmd(imie, nazwisko, drugie_imie, data_ur, nr_tel, pesel,
+							nr_dowodu, data_id);
+
+					insert_to_db(insert_worker_cmd, insert_adres_cmd, insert_data_cmd);
+				}
+				else
+				{
+					System.out.println("User exists.");
+				}
+				
+			}
+
+			
+			
+		});
 		EmployeesPanel.add(btnDodaj);
 		
 		JButton btnUsu = new JButton("usu\u0144 pracownika");
 		btnUsu.setBounds(888, 166, 171, 23);
+		btnUsu.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String imie = EmployessPersonalDataTextName.getText();
+				String nazwisko = EmployessPersonalDataTextSurname.getText();
+				String drugie_imie = EmployessPersonalDataTextSecondName.getText();
+				String data_ur = EmployessPersonalDataTextDateOfBirth.getText();
+				String wiek = EmployessPersonalDataTextAge.getText();
+				String nr_tel = EmployessPersonalDataTextPhoneNumberOne.getText();
+				String pesel = EmployessPersonalDataTextPeselNumber.getText();
+				String nr_dowodu = EmployessPersonalDataTextEvidenceNumber.getText();
+				String ulica = EmployessPersonalDataTextStreet.getText();
+				String nr_lokalu = EmployessPersonalDataTextLocalNumber.getText();
+				String kod_pocztowy = EmployessPersonalDataTextPostalCode.getText();
+				String miasto = EmployessPersonalDataTextCity.getText();
+				String wojewodztwo = EmployessPersonalDataTextLand.getText();
+				String kraj = EmployessPersonalDataTextCountry.getText();
+				
+				try {
+					String check_existing_cmd = "select * from dane_osobowe join pracownicy " +
+		                    "on dane_osobowe.daneid = pracownicy.id_danych_osobowych join adres" +
+					   	    " on pracownicy.ID_ADRESU = adres.adresid where " +
+		                    "dane_osobowe.imie = '"+imie+"' and dane_osobowe.nazwisko = '"+nazwisko+"' and dane_osobowe.pesel = '"+pesel+"'";
+					Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(check_existing_cmd);
+					String id_adr, id_danych, id_pracownika;
+					id_adr = id_danych = id_pracownika = "";
+					id_adr = result.get().get(0).get("id_adresu").toString();
+					id_danych = result.get().get(0).get("id_danych_osobowych").toString();
+					id_pracownika = result.get().get(0).get("pracownicyid").toString();
+					String del_adr_cmd = "delete from adres where adresid = "+id_adr;
+					String del_dane_cmd = "delete from dane_osobowe where daneid = "+id_danych;
+					String del_pracownik_cmd = "delete from pracownicy where pracownicyid = "+id_pracownika;
+					insert_to_db(del_pracownik_cmd, del_adr_cmd, del_dane_cmd);
+					
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					System.out.println("Blad usuwania usera");
+				} catch (ExecutionException e1) {
+					// TODO Auto-generated catch block
+					System.out.println("Blad usuwania usera");
+				}
+				
+				
+			}
+			
+		});
 		EmployeesPanel.add(btnUsu);
 		
 		Choice EmployessMainChoiceWorkplace = new Choice();
@@ -442,6 +573,9 @@ public class MainWindow {
 		EmployessPersonalData.add(lblTypUmowyO);
 		
 		Choice EmployessPersonalDataChoiceConctractOfEmployment = new Choice();
+		EmployessPersonalDataChoiceConctractOfEmployment.add("Zlecenie");
+		EmployessPersonalDataChoiceConctractOfEmployment.add("O prace");
+		EmployessPersonalDataChoiceConctractOfEmployment.select(1);
 		EmployessPersonalDataChoiceConctractOfEmployment.setBounds(449, 262, 190, 20);
 		EmployessPersonalData.add(EmployessPersonalDataChoiceConctractOfEmployment);
 		
@@ -582,14 +716,183 @@ public class MainWindow {
 		
 		JButton VehiclesMainButtonAdd = new JButton("dodaj pojazd");
 		VehiclesMainButtonAdd.setBounds(889, 110, 171, 23);
+		VehiclesMainButtonAdd.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+
+
+				String spalanie = VehiclesMainTextFuel.getText();
+				String maks_predkosc = VehiclesInformationTextTopSpeed.getText();
+				String masa_wlasna = VehiclesInformationTextSelfMass.getText();
+				String nr_podwozia = VehiclesInformationTextChassisNumber.getText();
+				String maks_ladownosc = VehiclesInformationTextMaxCapacity.getText();
+				String nr_rejestracyjny = VehiclesInformationTextRegistrationNumber.getText();
+				String pierwsza_rejestracja = VehiclesInformationTextFirstRegistration.getText();
+				String kraj = VehiclesInformationTextCountry.getText();
+				String rocznik = VehiclesInformationTextYear.getText();
+				String model = VehiclesInformationTextModel.getText();
+				String marka = VehiclesInformationTextBrand.getText();
+				String nr_silnika = VehiclesInformationTextEngineNumber.getText();
+				String pojemnosc_silnika = VehiclesInformationTextEngineCapacity.getText();
+				String olej = VehiclesInformationTextOil.getText();
+				String przebieg = VehiclesInformationTextMilage.getText();
+				String id_budynku = "1";
+				String id_nastepnej_naprawy="1";
+				String nastepny_przeglad = VehiclesMainTextOverview.getText();
+				String rodzaj_naczepy = "Normalna";
+				String rodzaj_napedu = "4x4";
+				String id_wlasciciela = "1";
+				
+				
+				String check_existing_cmd = "Select * from pojazdy join dowod_rejestracyjny_pojazdu on pojazdy.pojazdyid = dowod_rejestracyjny_pojazdu.id_pojazdu ";
+				check_existing_cmd += "join karta_techniczna_pojazdu on pojazdy.pojazdyid = karta_techniczna_pojazdu.id_pojazdu where ";
+				check_existing_cmd += "marka = '"+marka+"' and model = '"+model+"' and nr_rejestracyjny='"+nr_rejestracyjny+"'";
+				
+				Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(check_existing_cmd);
+				int size = 0;
+				try {
+					size = result.get().get(0).size();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					size = 0;
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					size = 0;
+				}
+				if(!(size > 0))
+				{
+					String pojazd_id = "";
+					try {
+						pojazd_id = get_car_id().get().get(0).get("nextval").toString();
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (ExecutionException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					String insert_pojazd_cmd = "";
+					String insert_karta_cmd = "";
+					String insert_dowod_cmd = "";
+					insert_pojazd_cmd += "Insert into pojazdy ( id_budynku, nastepny_przeglad, pojazdyid, id_ostatniej_naprawy) ";
+					System.out.println(new Date().toString());
+					insert_pojazd_cmd += "values ("+id_budynku+", TO_DATE('"+nastepny_przeglad+"', 'yyyy-mm-dd'), "+pojazd_id+", "+id_nastepnej_naprawy+")";
+					insert_karta_cmd += "insert into karta_techniczna_pojazdu ";
+					insert_karta_cmd += "(id_pojazdu, spalanie, rok_produkcji, max_ladownosc, nr_nadwozia, nr_silnika, pojemnosc_silnika, przebieg_w_km, max_predkosc, kraj_produkcji, pierwsza_rejestracja, masa_wlasna, zalecany_olej, rodzaj_napedu, rodzaj_naczepy, model) ";
+					insert_karta_cmd += "values ("+pojazd_id+", "+spalanie+", "+rocznik+", "+maks_ladownosc+", "+nr_podwozia+", "+nr_silnika+", "+pojemnosc_silnika+", "+przebieg+", "+maks_predkosc+", '"+kraj+"', TO_DATE('"+pierwsza_rejestracja+"', 'yyyy-mm-dd'), "+masa_wlasna+", '"+olej+"', '"+rodzaj_napedu+"', '"+rodzaj_naczepy+"', '"+model+"')";
+					insert_dowod_cmd += "insert into dowod_rejestracyjny_pojazdu (marka, nr_rejestracyjny, id_wlasciciela, rok_produkcji, id_pojazdu) ";
+					insert_dowod_cmd += "values ('"+marka+"', '"+nr_rejestracyjny+"', "+id_wlasciciela+", "+rocznik+", "+pojazd_id+")";
+					System.out.println(insert_dowod_cmd);
+					System.out.println(insert_karta_cmd);
+					insert_to_db(insert_pojazd_cmd, insert_karta_cmd, insert_dowod_cmd);
+				}
+				else System.out.println("Car already exists.");
+				
+			}
+			
+		});
 		VehiclesPanel.add(VehiclesMainButtonAdd);
 		
 		JButton VehiclesMainButtonSearch = new JButton("wyszukaj pojazd");
 		VehiclesMainButtonSearch.setBounds(889, 68, 171, 23);
+		VehiclesMainButtonSearch.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String silnik = VehiclesMainTextEnigne.getText();
+				String model = VehiclesMainTextModel.getText();
+				String marka = VehiclesMainTextBrand.getText();
+				String przebieg =  VehiclesMainTextMileage.getText();
+				String spalanie = VehiclesMainTextFuel.getText();
+				String pojemnosc_silnika = VehiclesMainTextCapacity.getText();
+				String check_existing_cmd = "Select * from pojazdy join dowod_rejestracyjny_pojazdu on pojazdy.pojazdyid = dowod_rejestracyjny_pojazdu.id_pojazdu ";
+				check_existing_cmd += "join karta_techniczna_pojazdu on pojazdy.pojazdyid = karta_techniczna_pojazdu.id_pojazdu where ";
+				String search_by = "";
+				if(!silnik.equals("")) 	{
+					if(!search_by.equals("")) search_by += "and ";
+					search_by += "przebieg = "+przebieg+" ";
+				}
+				if(!model.equals("")) 	{
+					if(!search_by.equals("")) search_by += "and ";
+					search_by += "model = '"+model+"' ";
+				}
+				if(!marka.equals("")) 	{
+					if(!search_by.equals("")) search_by += "and ";
+					search_by += "marka = '"+marka+"' ";
+				}
+				if(!spalanie.equals("")) 	{
+					if(!search_by.equals("")) search_by += "and ";
+					search_by += "spalanie = "+spalanie+" ";
+				}
+				if(!pojemnosc_silnika.equals("")) 	{
+					if(!search_by.equals("")) search_by += "and ";
+					search_by += "pojemnosc_silnika = "+pojemnosc_silnika+" ";
+				}
+
+				check_existing_cmd += search_by;
+
+				Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(check_existing_cmd);
+				try {
+					Map<String, Object> car = result.get().get(0);
+					VehiclesMainTextFuel.setText(car.get("spalanie").toString());
+					VehiclesInformationTextTopSpeed.setText(car.get("max_predkosc").toString());
+					VehiclesInformationTextSelfMass.setText(car.get("masa_wlasna").toString());
+					VehiclesInformationTextChassisNumber.setText(car.get("nr_nadwozia").toString());
+					VehiclesInformationTextMaxCapacity.setText(car.get("max_ladownosc").toString());
+					VehiclesInformationTextRegistrationNumber.setText(car.get("nr_rejestracyjny").toString());
+					VehiclesInformationTextFirstRegistration.setText(car.get("pierwsza_rejestracja").toString().split(" ")[0]);
+					VehiclesInformationTextCountry.setText(car.get("kraj_produkcji").toString());
+					VehiclesInformationTextYear.setText(car.get("rok_produkcji").toString());
+					VehiclesInformationTextModel.setText(car.get("model").toString());
+					VehiclesInformationTextBrand.setText(car.get("marka").toString());
+					VehiclesInformationTextEngineNumber.setText(car.get("nr_silnika").toString());
+					VehiclesInformationTextEngineCapacity.setText(car.get("pojemnosc_silnika").toString());
+					VehiclesInformationTextOil.setText(car.get("zalecany_olej").toString());
+					VehiclesInformationTextMilage.setText(car.get("przebieg").toString());
+					VehiclesMainTextOverview.setText(car.get("nastepny_przeglad").toString().split(" ")[0]);
+					
+				}  catch (Exception e1) {
+					// TODO Auto-generated catch block
+					System.out.println("No car found");
+				}
+			}
+			
+		});
 		VehiclesPanel.add(VehiclesMainButtonSearch);
 		
 		JButton VehiclesMainButtonDelete = new JButton("usu\u0144 pojazd");
 		VehiclesMainButtonDelete.setBounds(889, 152, 171, 23);
+		VehiclesMainButtonDelete.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String nr_rejestracyjny = VehiclesInformationTextRegistrationNumber.getText();
+				String model = VehiclesInformationTextModel.getText();
+				String marka = VehiclesInformationTextBrand.getText();	
+				
+				String check_existing_cmd = "Select * from pojazdy join dowod_rejestracyjny_pojazdu on pojazdy.pojazdyid = dowod_rejestracyjny_pojazdu.id_pojazdu ";
+				check_existing_cmd += "join karta_techniczna_pojazdu on pojazdy.pojazdyid = karta_techniczna_pojazdu.id_pojazdu where ";
+				check_existing_cmd += "marka = '"+marka+"' and model = '"+model+"' and nr_rejestracyjny='"+nr_rejestracyjny+"'";
+
+				Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(check_existing_cmd);
+				try {
+					String id_pojazdu = result.get().get(0).get("pojazdyid").toString();
+					String del_car_cmd = "delete from pojazdy where pojazdyid = "+id_pojazdu;
+					String del_dowod_cmd = "delete from dowod_rejestracyjny_pojazdu where id_pojazdu = "+id_pojazdu;
+					String del_karta_cmd = "delete from karta_techniczna_pojazdu where id_pojazdu = "+id_pojazdu;
+					insert_to_db(del_car_cmd, del_dowod_cmd, del_karta_cmd);
+				}catch (Exception e1) {
+					// TODO Auto-generated catch block
+					System.out.println("No such car exists.");
+				}
+				
+			}
+			
+		});
 		VehiclesPanel.add(VehiclesMainButtonDelete);
 		
 		JRadioButton VehiclesMainRadioButtonEdit = new JRadioButton("tryb edycji");
@@ -639,6 +942,7 @@ public class MainWindow {
 		JLabel lblMaxadowno = new JLabel("Max \u0141adowno\u015B\u0107:");
 		lblMaxadowno.setBounds(10, 200, 110, 20);
 		VehiclesInformation.add(lblMaxadowno);
+		
 		
 		VehiclesInformationTextMaxCapacity = new JTextField();
 		VehiclesInformationTextMaxCapacity.setColumns(10);
@@ -778,7 +1082,6 @@ public class MainWindow {
 		JButton button_1 = new JButton("Szczeg\u00F3\u0142y...");
 		button_1.setBounds(870, 11, 167, 23);
 		panel_7.add(button_1);
-		
 		VehiclesMainTextCapacity = new JTextField();
 		VehiclesMainTextCapacity.setColumns(10);
 		VehiclesMainTextCapacity.setBounds(348, 190, 200, 20);
@@ -801,7 +1104,7 @@ public class MainWindow {
 		lblMiesiczneOpaty.setBounds(248, 168, 90, 20);
 		InstitutionPanel.add(lblMiesiczneOpaty);
 		
-		JLabel lblRokPowstania = new JLabel("Rok powstania:");
+		JLabel lblRokPowstania = new JLabel("Data powstania:");
 		lblRokPowstania.setBounds(248, 126, 90, 20);
 		InstitutionPanel.add(lblRokPowstania);
 		
@@ -817,7 +1120,7 @@ public class MainWindow {
 		JRadioButton InstytutionMainRadioButtonEdit = new JRadioButton("tryb edycji");
 		InstytutionMainRadioButtonEdit.setBounds(348, 39, 200, 23);
 		InstitutionPanel.add(InstytutionMainRadioButtonEdit);
-		
+
 		InstytutionMainTextYear = new JTextField();
 		InstytutionMainTextYear.setColumns(10);
 		InstytutionMainTextYear.setBounds(348, 126, 200, 20);
@@ -843,7 +1146,7 @@ public class MainWindow {
 		JLabel lblUlica_1 = new JLabel("Ulica:");
 		lblUlica_1.setBounds(578, 84, 102, 20);
 		InstitutionPanel.add(lblUlica_1);
-		
+
 		InstytutionMainTextStreet = new JTextField();
 		InstytutionMainTextStreet.setColumns(10);
 		InstytutionMainTextStreet.setBounds(679, 84, 200, 20);
@@ -861,14 +1164,162 @@ public class MainWindow {
 		
 		JButton InstytutionMainButtonDelete = new JButton("usu\u0144 plac\u00F3wk\u0119");
 		InstytutionMainButtonDelete.setBounds(889, 167, 171, 23);
+		InstytutionMainButtonDelete.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				String nazwa = InstytutionInformationTextName.getText();
+				String rok_powstania = InstytutionInformationYear.getText();
+				String check_existing_cmd = "Select * from budynki join adres on budynki.id_adresu = adres.adresid where nazwa = '"+nazwa+"' and rok_powstania = TO_DATE('"+rok_powstania+"', 'yyyy-mm-dd')";
+				Future<ArrayList<Map<String, Object>>> existing = executeCommandAndWaitForOutput(check_existing_cmd);
+				
+				try {
+					String adres_id = existing.get().get(0).get("adresid").toString();
+					String building_id = existing.get().get(0).get("budynkiid").toString();
+					String del_building_cmd = "delete from budynki where budynkiid ="+building_id;
+					String del_adr_cmd = "delete from adres where adresid ="+adres_id;
+					insert_to_db(del_building_cmd, del_adr_cmd, "");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("Couldnt delete building or adress");
+				}
+			}
+			
+		});
 		InstitutionPanel.add(InstytutionMainButtonDelete);
 		
 		JButton InstytutionMainButtonAdd = new JButton("dodaj plac\u00F3wk\u0119");
 		InstytutionMainButtonAdd.setBounds(889, 125, 171, 23);
+		InstytutionMainButtonAdd.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+
+				String nazwa = InstytutionInformationTextName.getText();
+				String rok_powstania = InstytutionInformationYear.getText();
+				String manager = InstytutionInformationTextManager.getText();
+				String dyrektor = InstytutionInformationTextDirector.getText();
+				String ochrona = InstytutionInformationTextSecrurity.getText();
+				String straty = InstytutionInformationTextLoses.getText();
+				String zarobki = InstytutionInformationTextEarnings.getText();
+				String zysk = InstytutionInformationTextTurnover.getText();
+				String ulica = InstytutionInformationTextStreet.getText();
+				String nr_lokalu = InstytutionInformationTextBuldingNumber.getText();
+				String miasto = InstytutionInformationTextCity.getText();
+				String wojewodztwo = InstytutionInformationTextLand.getText();
+				String kraj = InstytutionInformationTextCountry.getText();
+				String kod_pocztowy = InstytutionInformationTextPostalCode.getText();
+				String typ = "Placowka";
+				try {
+					String check_existing_adr_cmd = "Select * from adres where ulica ='"+ulica+"' and nr_lokalu = "+nr_lokalu+" and miasto = '"+miasto+"'";
+					String check_existing_building_cmd = "Select * from budynki where nazwa = '"+nazwa+"' and rok_powstania = TO_DATE('"+rok_powstania+"', 'yyyy-mm-dd')";
+					Future<ArrayList<Map<String, Object>>> existing_adr = executeCommandAndWaitForOutput(check_existing_adr_cmd);
+					Future<ArrayList<Map<String, Object>>> existing_building = executeCommandAndWaitForOutput(check_existing_building_cmd);
+					int b_size = 0, a_size = 0;
+					try {
+						b_size=existing_building.get().size();
+						a_size=existing_adr.get().size();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						b_size = a_size = 0;
+					}
+					if(a_size <= 0 && b_size <= 0)
+					{
+						String adres_id = get_adr_id().get().get(0).get("nextval").toString();
+						String insert_adres_cmd = get_insert_adres_cmd(ulica, nr_lokalu, kod_pocztowy, miasto, wojewodztwo,
+								kraj, adres_id);
+						String building_id = get_building_id().get().get(0).get("nextval").toString();
+						String insert_building_cmd = "insert into budynki (budynkiid, nazwa, typ, id_adresu, rok_powstania, dyrektor, kierownik, FIRMA_OCHRONIARSKA, bilans_miesieczny, miesieczny_obrot) ";
+						insert_building_cmd += "values ("+building_id+", '"+nazwa+"', '"+typ+"', "+adres_id+", TO_DATE('"+rok_powstania+"', 'yyyy-mm-dd'), '"+dyrektor+"', '"+manager+"', '"+ochrona+"', "+zysk+", "+zarobki+")";
+						System.out.println(insert_building_cmd);
+						insert_to_db(insert_adres_cmd, insert_building_cmd, "");
+					}
+					else System.out.println("Building or address already exists.");
+				}catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("Couldnt add new building");
+				}
+				
+			}
+			
+		});
 		InstitutionPanel.add(InstytutionMainButtonAdd);
 		
 		JButton InstytutionMainButtonSearch = new JButton("wyszukaj plac\u00F3wk\u0119");
 		InstytutionMainButtonSearch.setBounds(889, 83, 171, 23);
+		InstytutionMainButtonSearch.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				String nazwa = InstytutionMainTextName.getText();
+				String data_powstania = InstytutionMainTextYear.getText();
+				String ulica = InstytutionMainTextStreet.getText();
+				String nr_lokalu = InstytutionMainTextBuldingNumber.getText();
+				String miasto = InstytutionMainTextCity.getText();
+				String cmd = "Select * from budynki join adres on budynki.id_adresu = adres.adresid where ";
+				String search_by = "";
+				if(!nazwa.equals(""))
+				{
+					if(!search_by.equals("")) search_by += "and ";
+					search_by += "nazwa = '"+nazwa+"' ";
+				}
+				if(!ulica.equals(""))
+				{
+					if(!search_by.equals("")) search_by += "and ";
+					search_by += "ulica = '"+ulica+"' ";
+				}
+				if(!data_powstania.equals(""))
+				{
+					if(!search_by.equals("")) search_by += "and ";
+					search_by += "rok_powstania = TO_DATE('"+data_powstania+"', 'yyyy-mm-dd') ";
+				}
+				if(!miasto.equals(""))
+				{
+					if(!search_by.equals("")) search_by += "and ";
+					search_by += "miasto = '"+miasto+"' ";
+				}
+				if(!nr_lokalu.equals(""))
+				{
+					if(!search_by.equals("")) search_by += "and ";
+					search_by += "nr_lokalu = "+nr_lokalu+" ";
+				}
+				cmd += search_by;
+				System.out.println(cmd);
+				Future<ArrayList<Map<String, Object>>> existing_building = executeCommandAndWaitForOutput(cmd);
+				try {
+					Map<String, Object> building = existing_building.get().get(0);
+					InstytutionInformationTextName.setText(building.get("nazwa").toString());
+					InstytutionInformationYear.setText(building.get("rok_powstania").toString().split(" ")[0]);
+					InstytutionInformationTextManager.setText(building.get("kierownik").toString());
+					InstytutionInformationTextDirector.setText(building.get("dyrektor").toString());
+					InstytutionInformationTextSecrurity.setText(building.get("firma_ochroniarska").toString());
+					
+					
+					String zarobki = building.get("miesieczny_obrot").toString();
+					String zysk = building.get("bilans_miesieczny").toString();
+//					int strata =  (Integer.parseInt(zarobki) - Integer.parseInt(zysk));
+//					String straty = "" + strata;
+					InstytutionInformationTextEarnings.setText(zarobki);
+//					InstytutionInformationTextLoses.setText(straty);
+					InstytutionInformationTextTurnover.setText(zysk);
+					InstytutionInformationTextStreet.setText(building.get("ulica").toString());
+					InstytutionInformationTextBuldingNumber.setText(building.get("nr_lokalu").toString());
+					InstytutionInformationTextCity.setText(building.get("miasto").toString());
+					InstytutionInformationTextLand.setText(building.get("wojewodztwo").toString());
+					InstytutionInformationTextCountry.setText(building.get("kraj").toString());
+					InstytutionInformationTextPostalCode.setText(building.get("kod_pocztowy").toString());
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("No such building.");
+					
+				}
+			}
+			
+		});
 		InstitutionPanel.add(InstytutionMainButtonSearch);
 		
 		JTabbedPane tabbedPane_2 = new JTabbedPane(JTabbedPane.TOP);
@@ -884,7 +1335,7 @@ public class MainWindow {
 		InstytutionInformationTextName.setColumns(10);
 		InstytutionInformationTextName.setBounds(120, 11, 190, 20);
 		panel_8.add(InstytutionInformationTextName);
-		
+
 		InstytutionInformationYear = new JTextField();
 		InstytutionInformationYear.setColumns(10);
 		InstytutionInformationYear.setBounds(120, 42, 190, 20);
@@ -955,7 +1406,7 @@ public class MainWindow {
 		JLabel lblNazwa_1 = new JLabel("Nazwa:");
 		lblNazwa_1.setBounds(10, 11, 100, 20);
 		panel_8.add(lblNazwa_1);
-		
+
 		InstytutionInformationTextStreet = new JTextField();
 		InstytutionInformationTextStreet.setColumns(10);
 		InstytutionInformationTextStreet.setBounds(449, 11, 190, 20);
@@ -995,7 +1446,7 @@ public class MainWindow {
 		InstytutionInformationTextLand.setColumns(10);
 		InstytutionInformationTextLand.setBounds(449, 104, 190, 20);
 		panel_8.add(InstytutionInformationTextLand);
-		
+
 		InstytutionInformationTextCountry = new JTextField();
 		InstytutionInformationTextCountry.setColumns(10);
 		InstytutionInformationTextCountry.setBounds(449, 138, 190, 20);
@@ -1231,7 +1682,31 @@ public class MainWindow {
 		Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(cmd);
 		return result;
 	}
-
+	private Future<ArrayList<Map<String, Object>>> get_adr_id() {
+		String cmd = "select ADRES_ID_SEQ.nextval from dual";
+		Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(cmd);
+		return result;
+	}
+	private Future<ArrayList<Map<String, Object>>> get_worker_id() {
+		String cmd = "select pracownik_ID_SEQ.nextval from dual";
+		Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(cmd);
+		return result;
+	}
+	private Future<ArrayList<Map<String, Object>>> get_data_id() {
+		String cmd = "select dane_ID_SEQ.nextval from dual";
+		Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(cmd);
+		return result;
+	}
+	private Future<ArrayList<Map<String, Object>>> get_building_id() {
+		String cmd = "select budynek_ID_SEQ.nextval from dual";
+		Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(cmd);
+		return result;
+	}
+	private Future<ArrayList<Map<String, Object>>> get_car_id() {
+		String cmd = "select pojazd_ID_SEQ.nextval from dual";
+		Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(cmd);
+		return result;
+	}
 	private Future<ArrayList<Map<String, Object>>> executeCommandAndWaitForOutput(String cmd) {
 		try {
 			ExecutorService executor = Executors.newFixedThreadPool(2);
@@ -1247,7 +1722,41 @@ public class MainWindow {
 		}
 		
 	}
+	private void insert_to_db(String insert_worker, String insert_adres, String insert_data) {
+		try {
+			ExecutorService executor = Executors.newFixedThreadPool(4);
+			executor.submit(new WaitForOutputAnimation());
+			if(!insert_worker.equals("")) executor.submit(new Execute_command(insert_worker));
+			if(!insert_adres.equals("")) executor.submit(new Execute_command(insert_adres));
+			if(!insert_data.equals("")) executor.submit(new Execute_command(insert_data));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println("Couldnt add worker, address or data.");
+		}
+	}
+	private String get_insert_data_cmd(String imie, String nazwisko, String drugie_imie, String data_ur,
+			String nr_tel, String pesel, String nr_dowodu, String data_id) {
+		String insert_data_cmd = "";
+		insert_data_cmd += "insert into dane_osobowe (imie ,nazwisko ,nr_tel, nr_dowodu, data_urodzenia ,pesel ,drugie_imie, daneid) ";
+		insert_data_cmd += "values ('"+imie+"', '"+nazwisko+"', "+nr_tel+", '"+nr_dowodu+"', TO_DATE('"+data_ur+"', 'yyyy-mm-dd'), '"+pesel+"', '"+drugie_imie+"', "+data_id+")";
+		return insert_data_cmd;
+	}
 
+	private String get_insert_adres_cmd(String ulica, String nr_lokalu, String kod_pocztowy, String miasto,
+			String wojewodztwo, String kraj, String adr_id) {
+		String insert_adres_cmd = "";
+		insert_adres_cmd += "insert into adres (ulica ,miasto , nr_lokalu, kod_pocztowy, wojewodztwo, kraj, adresid) ";
+		insert_adres_cmd += "values ('"+ulica+"', '"+miasto+"', "+nr_lokalu+", '"+kod_pocztowy+"', '"+wojewodztwo+"', '"+kraj+"', "+adr_id+")";
+		return insert_adres_cmd;
+	}
+
+	private String get_insert_worker_cmd(String typ_umowy, String adr_id, String building_id, String car_id,
+			String worker_id, String data_id) {
+		String insert_worker_cmd = "";
+		insert_worker_cmd += "insert into pracownicy (id_budynku, id_pojazdu, id_adresu, pracownicyid, id_danych_osobowych, typ_umowy_o_prace, stanowisko) ";
+		insert_worker_cmd += "values (" + building_id + ", " + car_id + ", " + adr_id + ", " + worker_id + ", " + data_id + ", '" + typ_umowy + "', 'Pracownik')";
+		return insert_worker_cmd;
+	}
 	private String getSqlSearchCondition() {
 		String sql_condition = "";
 		String age = EmployessMainTextAge.getText();
@@ -1302,6 +1811,12 @@ public class MainWindow {
 		EmployessPersonalDataTextCity.setText(output.get("miasto").toString());
 		EmployessPersonalDataTextLand.setText(output.get("wojewodztwo").toString());
 		EmployessPersonalDataTextCountry.setText(output.get("kraj").toString());
+		String umowa = output.get("typ_umowy_o_prace").toString();
+		System.out.println(umowa);
+		if (umowa.equals("Zlecenie")) EmployessPersonalDataChoiceConctractOfEmployment.select(0);
+		else EmployessPersonalDataChoiceConctractOfEmployment.select(1);
+		
+		
 	}
-
+	
 }

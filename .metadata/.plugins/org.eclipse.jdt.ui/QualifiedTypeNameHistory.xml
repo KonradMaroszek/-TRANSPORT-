@@ -14,4 +14,6 @@
 <fullyQualifiedTypeName name="java.time.ZoneId"/>
 <fullyQualifiedTypeName name="java.util.Date"/>
 <fullyQualifiedTypeName name="java.util.concurrent.TimeUnit"/>
+<fullyQualifiedTypeName name="Database.DatabaseConnection"/>
+<fullyQualifiedTypeName name="Database.Execute_command"/>
 </qualifiedTypeNameHistroy>
