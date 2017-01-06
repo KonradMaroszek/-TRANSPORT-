@@ -1,0 +1,34 @@
+package Commons;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import javax.swing.JPanel;
+
+public class TabGuardian {	
+	
+	HashMap<String,JPanel> tabPanels;
+	
+	public TabGuardian(){
+		tabPanels = new HashMap<String,JPanel>();
+	}
+	
+	public void addPanelToMap (String name, JPanel panel){
+		tabPanels.put(name, panel);
+	}
+	
+	public HashMap<String,JPanel> getPanelMap(){
+		return tabPanels;
+	}
+	
+	public void HidePanelsByName (ArrayList<String> panelsNames){
+		for (String panelName : panelsNames){
+			tabPanels.get(panelName).setVisible(false);
+		}
+	}
+	
+	public void ShowPanelsByName (ArrayList<String> panelsNames){
+		for (String panelName : panelsNames){
+			tabPanels.get(panelName).setVisible(true);
+		}
+	}
+}

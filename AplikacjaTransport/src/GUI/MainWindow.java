@@ -20,6 +20,7 @@ import javax.swing.JSpinner;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
 
+import Commons.TabGuardian;
 import Database.DatabaseConnection;
 import Database.Execute_command;
 import Database.FetchQuery;
@@ -48,6 +49,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -138,6 +140,10 @@ public class MainWindow {
 	private JTextField InstytutionInformationTextCountry;
 	private JTable InstytutionEquipmentTable;
 	private JTextField InstytutionInformationTextPostalCode;
+	
+	TabGuardian tabGuardian;
+	ArrayList<String> panelsNames;
+	JTabbedPane tabPanel;
 
 	/**
 	 * Launch the application.
@@ -159,6 +165,9 @@ public class MainWindow {
 	 * Create the application.
 	 */
 	public MainWindow() {
+		tabGuardian = new TabGuardian();
+		panelsNames = new ArrayList<String>();
+		tabPanel = new JTabbedPane();
 		initialize();
 	}
 
@@ -173,15 +182,19 @@ public class MainWindow {
 		frmAplikacjaTransport.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmAplikacjaTransport.getContentPane().setLayout(new BoxLayout(frmAplikacjaTransport.getContentPane(), BoxLayout.X_AXIS));
 		
-		JTabbedPane TabPanel = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane TabPanel = tabPanel = new JTabbedPane(JTabbedPane.TOP);
 		TabPanel.setBackground(Color.LIGHT_GRAY);
-		
-		JPanel MainMenuPanle = new JPanel();
-		TabPanel.addTab("Menu g\u0142\u00F3wne", new ImageIcon(MainWindow.class.getResource("/resources/menu.png")), MainMenuPanle, null);
-		MainMenuPanle.setLayout(null);
 		frmAplikacjaTransport.getContentPane().add(TabPanel);
 		
+		JPanel MainMenuPanle = new JPanel();
+		tabGuardian.addPanelToMap("MainMenu", MainMenuPanle);
+		panelsNames.add("MainMenu");
+		TabPanel.addTab("Menu g\u0142\u00F3wne", new ImageIcon(MainWindow.class.getResource("/resources/menu.png")), MainMenuPanle, null);
+		MainMenuPanle.setLayout(null);
+		
 		JPanel EmployeesPanel = new JPanel();
+		tabGuardian.addPanelToMap("Employees", EmployeesPanel);
+		panelsNames.add("Employees");
 		TabPanel.addTab("Pracownicy", new ImageIcon(MainWindow.class.getResource("/resources/pracownicy.png")), EmployeesPanel, null);
 		
 		JLabel EmployeesPhotoLabel = new JLabel("");
@@ -648,6 +661,8 @@ public class MainWindow {
 		EmployeesPanel.add(EmployessMainRadioButtonEditMode);
 		
 		JPanel VehiclesPanel = new JPanel();
+		tabGuardian.addPanelToMap("Vehicles", VehiclesPanel);
+		panelsNames.add("Vehicles");
 		TabPanel.addTab("Pojazdy", new ImageIcon(MainWindow.class.getResource("/resources/truck.png")), VehiclesPanel, null);
 		VehiclesPanel.setLayout(null);
 		
@@ -1088,6 +1103,8 @@ public class MainWindow {
 		VehiclesPanel.add(VehiclesMainTextCapacity);
 		
 		JPanel InstitutionPanel = new JPanel();
+		tabGuardian.addPanelToMap("Institution", InstitutionPanel);
+		panelsNames.add("Institution");
 		TabPanel.addTab("Plac\u00F3wki", new ImageIcon(MainWindow.class.getResource("/resources/fabryka.png")), InstitutionPanel, null);
 		InstitutionPanel.setLayout(null);
 		
@@ -1531,9 +1548,13 @@ public class MainWindow {
 		InstitutionPanel.add(InstytutionMainTextCountry);
 		
 		JPanel RoutePanel = new JPanel();
+		tabGuardian.addPanelToMap("Route", RoutePanel);
+		panelsNames.add("Route");
 		TabPanel.addTab("Trasy", new ImageIcon(MainWindow.class.getResource("/resources/mapa.png")), RoutePanel, null);
 		
 		JPanel ContractorsPanel = new JPanel();
+		tabGuardian.addPanelToMap("Contractors", ContractorsPanel);
+		panelsNames.add("Contractors");
 		TabPanel.addTab("Kontrahenci", new ImageIcon(MainWindow.class.getResource("/resources/uslugi_pracownicy.png")), ContractorsPanel, null);
 		ContractorsPanel.setLayout(null);
 		
@@ -1640,7 +1661,17 @@ public class MainWindow {
 		tabbedPane_3.addTab("Faktury", new ImageIcon(MainWindow.class.getResource("/images32x32/faktura.png")), panel_12, null);
 		
 		JPanel SettingsPanel = new JPanel();
-		TabPanel.addTab("Ustawienia", new ImageIcon(MainWindow.class.getResource("/resources/ustawienia.png")), SettingsPanel, null);
+		tabGuardian.addPanelToMap("Settings", SettingsPanel);
+		panelsNames.add("Settings");
+		TabPanel.addTab("Ustawienia", new ImageIcon(MainWindow.class.getResource("/resources/ustawienia.png")), SettingsPanel, null);	
+
+		HashMap<String, JPanel> panels = tabGuardian.getPanelMap();
+		panels.remove("MainMenu");
+		
+		for (JPanel panel : panels.values()){
+			tabPanel.remove(panel);
+		}
+		
 	}
 	
 	private void brak_wynikow() {

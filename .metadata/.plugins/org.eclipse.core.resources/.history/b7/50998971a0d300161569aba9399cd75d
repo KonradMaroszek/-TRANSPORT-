@@ -1,0 +1,22 @@
+package Commons;
+
+import java.util.HashMap;
+import javax.swing.JPanel;
+
+public class TabGuardian {	
+	
+	HashMap<String,JPanel> tabPanels;
+	
+	public TabGuardian(){
+		tabPanels = new HashMap<String,JPanel>();
+	}
+	
+	public void addPanelToMap (String name, JPanel panel){
+		tabPanels.put(name, panel);
+	}
+	
+	HashMap<String,JPanel> getPanelMap(){
+		return tabPanels;
+	}
+	
+}
