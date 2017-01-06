@@ -99,10 +99,6 @@ public class MainWindow {
 	private JTextField textField_37;
 	private JTextField textField_38;
 	private JTextField textField_39;
-	private JTextField textField_40;
-	private JTextField textField_41;
-	private JTextField textField_42;
-	private JTextField textField_43;
 	private JTable EmployessTasksHistoryTable;
 	private JTable EmployessVehiclesTable;
 	private JTable EmployessCalendarTable;
@@ -176,6 +172,21 @@ public class MainWindow {
 	private JTextField textField_26;
 	private JTextField textField_27;
 	private JTextField textField_28;
+	private JPasswordField passwordField_1;
+	private JPasswordField passwordField_2;
+	private JPasswordField passwordField_3;
+	private JPasswordField passwordField_4;
+	private JPasswordField passwordField_5;
+	private JTextField textField_29;
+	private JTextField textField_30;
+	private JTable table_2;
+	private JTextField textField_31;
+	private JTextField textField_32;
+	private JTextField textField_33;
+	private JTextField textField_34;
+	private JTextField textField_35;
+	private JTextField textField_36;
+	private JTextField textField_40;
 
 	/**
 	 * Launch the application.
@@ -1987,96 +1998,56 @@ public class MainWindow {
 		TabPanel.addTab("Kontrahenci", new ImageIcon(MainWindow.class.getResource("/resources/uslugi_pracownicy.png")), ContractorsPanel, null);
 		ContractorsPanel.setLayout(null);
 		
-		JLabel label_18 = new JLabel("Miejsce Pracy:");
-		label_18.setBounds(214, 223, 90, 20);
-		ContractorsPanel.add(label_18);
+		JLabel lblNip = new JLabel("NIP:");
+		lblNip.setBounds(26, 195, 90, 20);
+		ContractorsPanel.add(lblNip);
 		
-		JLabel label_19 = new JLabel("Wiek:");
-		label_19.setBounds(214, 186, 90, 20);
-		ContractorsPanel.add(label_19);
+		JLabel lblFirma = new JLabel("Firma:");
+		lblFirma.setBounds(26, 164, 90, 20);
+		ContractorsPanel.add(lblFirma);
 		
 		JLabel label_20 = new JLabel("Nazwisko:");
-		label_20.setBounds(214, 144, 90, 20);
+		label_20.setBounds(26, 133, 90, 20);
 		ContractorsPanel.add(label_20);
 		
 		JLabel label_21 = new JLabel("Imi\u0119:");
-		label_21.setBounds(214, 102, 90, 20);
+		label_21.setBounds(26, 102, 90, 20);
 		ContractorsPanel.add(label_21);
 		
 		JRadioButton radioButton_2 = new JRadioButton("tryb edycji");
-		radioButton_2.setBounds(314, 57, 200, 23);
+		radioButton_2.setBounds(534, 11, 200, 23);
 		ContractorsPanel.add(radioButton_2);
 		
 		textField_37 = new JTextField();
 		textField_37.setColumns(10);
-		textField_37.setBounds(314, 102, 200, 20);
+		textField_37.setBounds(126, 102, 200, 20);
 		ContractorsPanel.add(textField_37);
 		
 		textField_38 = new JTextField();
 		textField_38.setColumns(10);
-		textField_38.setBounds(314, 144, 200, 20);
+		textField_38.setBounds(126, 133, 200, 20);
 		ContractorsPanel.add(textField_38);
 		
 		textField_39 = new JTextField();
 		textField_39.setColumns(10);
-		textField_39.setBounds(314, 186, 200, 20);
+		textField_39.setBounds(126, 164, 200, 20);
 		ContractorsPanel.add(textField_39);
 		
-		Choice choice_5 = new Choice();
-		choice_5.setBounds(314, 223, 200, 20);
-		ContractorsPanel.add(choice_5);
+		JButton btnUsuKontrahenta = new JButton("usu\u0144 kontrahenta");
+		btnUsuKontrahenta.setBounds(855, 222, 171, 23);
+		ContractorsPanel.add(btnUsuKontrahenta);
 		
-		textField_40 = new JTextField();
-		textField_40.setColumns(10);
-		textField_40.setBounds(645, 223, 200, 20);
-		ContractorsPanel.add(textField_40);
+		JButton btnEdytujKontrahenta = new JButton("edytuj\r\n kontrahenta");
+		btnEdytujKontrahenta.setBounds(855, 185, 171, 23);
+		ContractorsPanel.add(btnEdytujKontrahenta);
 		
-		textField_41 = new JTextField();
-		textField_41.setColumns(10);
-		textField_41.setBounds(645, 186, 200, 20);
-		ContractorsPanel.add(textField_41);
+		JButton btnDodajKontrahenta = new JButton("dodaj kontrahenta");
+		btnDodajKontrahenta.setBounds(855, 143, 171, 23);
+		ContractorsPanel.add(btnDodajKontrahenta);
 		
-		textField_42 = new JTextField();
-		textField_42.setColumns(10);
-		textField_42.setBounds(645, 144, 200, 20);
-		ContractorsPanel.add(textField_42);
-		
-		textField_43 = new JTextField();
-		textField_43.setColumns(10);
-		textField_43.setBounds(645, 102, 200, 20);
-		ContractorsPanel.add(textField_43);
-		
-		JLabel label_22 = new JLabel("Najbli\u017Cszy urlop:\r\n");
-		label_22.setBounds(544, 102, 102, 20);
-		ContractorsPanel.add(label_22);
-		
-		JLabel label_23 = new JLabel("ulubiony pojazd:");
-		label_23.setBounds(544, 144, 102, 20);
-		ContractorsPanel.add(label_23);
-		
-		JLabel label_24 = new JLabel("costu");
-		label_24.setBounds(544, 186, 102, 20);
-		ContractorsPanel.add(label_24);
-		
-		JLabel label_25 = new JLabel("costu");
-		label_25.setBounds(544, 223, 102, 20);
-		ContractorsPanel.add(label_25);
-		
-		JButton button_8 = new JButton("usu\u0144 pracownika");
-		button_8.setBounds(855, 222, 171, 23);
-		ContractorsPanel.add(button_8);
-		
-		JButton button_9 = new JButton("edytuj\r\n pracownika");
-		button_9.setBounds(855, 185, 171, 23);
-		ContractorsPanel.add(button_9);
-		
-		JButton button_10 = new JButton("dodaj pracownika");
-		button_10.setBounds(855, 143, 171, 23);
-		ContractorsPanel.add(button_10);
-		
-		JButton button_11 = new JButton("wyszukaj pracownika");
-		button_11.setBounds(855, 101, 171, 23);
-		ContractorsPanel.add(button_11);
+		JButton btnWyszukajKontrahenta = new JButton("wyszukaj kontrahenta");
+		btnWyszukajKontrahenta.setBounds(855, 101, 171, 23);
+		ContractorsPanel.add(btnWyszukajKontrahenta);
 		
 		JTabbedPane tabbedPane_3 = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane_3.setBackground(Color.LIGHT_GRAY);
@@ -2085,9 +2056,47 @@ public class MainWindow {
 		
 		JPanel panel_11 = new JPanel();
 		tabbedPane_3.addTab("Informacje", new ImageIcon(MainWindow.class.getResource("/images32x32/user_info-32.png")), panel_11, null);
+		panel_11.setLayout(null);
+		
+		JTextArea textArea = new JTextArea();
+		textArea.setBounds(10, 11, 917, 246);
+		panel_11.add(textArea);
+		
+		JButton button_8 = new JButton("Dodaj");
+		button_8.setBounds(948, 11, 89, 23);
+		panel_11.add(button_8);
+		
+		JButton button_9 = new JButton("Usu\u0144");
+		button_9.setBounds(948, 45, 89, 23);
+		panel_11.add(button_9);
+		
+		JButton button_10 = new JButton("Edytuj");
+		button_10.setBounds(948, 82, 89, 23);
+		panel_11.add(button_10);
 		
 		JPanel panel_12 = new JPanel();
 		tabbedPane_3.addTab("Faktury", new ImageIcon(MainWindow.class.getResource("/images32x32/faktura.png")), panel_12, null);
+		panel_12.setLayout(null);
+		
+		JButton btnDodaj_1 = new JButton("Dodaj");
+		btnDodaj_1.setBounds(948, 11, 89, 23);
+		panel_12.add(btnDodaj_1);
+		
+		JButton btnPodgld = new JButton("Podgl\u0105d");
+		btnPodgld.setBounds(948, 116, 89, 23);
+		panel_12.add(btnPodgld);
+		
+		table_2 = new JTable();
+		table_2.setBounds(10, 11, 911, 250);
+		panel_12.add(table_2);
+		
+		JButton btnUsu_1 = new JButton("Usu\u0144");
+		btnUsu_1.setBounds(948, 45, 89, 23);
+		panel_12.add(btnUsu_1);
+		
+		JButton btnEdytuj = new JButton("Edytuj");
+		btnEdytuj.setBounds(948, 82, 89, 23);
+		panel_12.add(btnEdytuj);
 		
 		JButton button_12 = new JButton("");
 		button_12.setIcon(new ImageIcon(MainWindow.class.getResource("/images32x32/leftarrow32.png")));
@@ -2099,11 +2108,161 @@ public class MainWindow {
 		button_13.setBounds(882, 11, 144, 35);
 		ContractorsPanel.add(button_13);
 		
+		textField_31 = new JTextField();
+		textField_31.setColumns(10);
+		textField_31.setBounds(126, 195, 200, 20);
+		ContractorsPanel.add(textField_31);
+		
+		JLabel lblPastwo_1 = new JLabel("Pa\u0144stwo:");
+		lblPastwo_1.setBounds(424, 260, 110, 20);
+		ContractorsPanel.add(lblPastwo_1);
+		
+		textField_32 = new JTextField();
+		textField_32.setColumns(10);
+		textField_32.setBounds(573, 260, 190, 20);
+		ContractorsPanel.add(textField_32);
+		
+		textField_33 = new JTextField();
+		textField_33.setColumns(10);
+		textField_33.setBounds(573, 223, 190, 20);
+		ContractorsPanel.add(textField_33);
+		
+		JLabel lblWojewdztwo_2 = new JLabel("Wojew\u00F3dztwo:");
+		lblWojewdztwo_2.setBounds(424, 229, 110, 20);
+		ContractorsPanel.add(lblWojewdztwo_2);
+		
+		JLabel lblMiasto_2 = new JLabel("Miasto:");
+		lblMiasto_2.setBounds(424, 195, 110, 20);
+		ContractorsPanel.add(lblMiasto_2);
+		
+		textField_34 = new JTextField();
+		textField_34.setColumns(10);
+		textField_34.setBounds(573, 195, 190, 20);
+		ContractorsPanel.add(textField_34);
+		
+		textField_35 = new JTextField();
+		textField_35.setColumns(10);
+		textField_35.setBounds(573, 164, 190, 20);
+		ContractorsPanel.add(textField_35);
+		
+		JLabel lblKodPocztowy_2 = new JLabel("Kod pocztowy:");
+		lblKodPocztowy_2.setBounds(424, 164, 110, 20);
+		ContractorsPanel.add(lblKodPocztowy_2);
+		
+		JLabel lblNumerLokalu_3 = new JLabel("Numer Lokalu:");
+		lblNumerLokalu_3.setBounds(424, 133, 110, 20);
+		ContractorsPanel.add(lblNumerLokalu_3);
+		
+		textField_36 = new JTextField();
+		textField_36.setColumns(10);
+		textField_36.setBounds(573, 133, 190, 20);
+		ContractorsPanel.add(textField_36);
+		
+		textField_40 = new JTextField();
+		textField_40.setColumns(10);
+		textField_40.setBounds(573, 102, 190, 20);
+		ContractorsPanel.add(textField_40);
+		
+		JLabel lblUlica_3 = new JLabel("Ulica:");
+		lblUlica_3.setBounds(424, 102, 110, 20);
+		ContractorsPanel.add(lblUlica_3);
+		
 		JPanel SettingsPanel = new JPanel();
 		tabGuardian.addPanelToMap("Ustawienia", SettingsPanel);
+		TabPanel.addTab("Ustawienia", new ImageIcon(MainWindow.class.getResource("/resources/ustawienia.png")), SettingsPanel, null);
+		SettingsPanel.setLayout(null);
+		
+		JButton btnZmieHaso = new JButton("Zmie\u0144 has\u0142o");
+		btnZmieHaso.setBounds(446, 82, 164, 23);
+		SettingsPanel.add(btnZmieHaso);
+		
+		JLabel lblZmianaHasa = new JLabel("Zmiana has\u0142a: ");
+		lblZmianaHasa.setBounds(10, 11, 137, 14);
+		SettingsPanel.add(lblZmianaHasa);
+		
+		JLabel lblNewLabel_2 = new JLabel("Stare has\u0142o:");
+		lblNewLabel_2.setBounds(10, 36, 137, 14);
+		SettingsPanel.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Nowe has\u0142o:");
+		lblNewLabel_3.setBounds(10, 61, 137, 14);
+		SettingsPanel.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Powt\u00F3rz nowe has\u0142o:");
+		lblNewLabel_4.setBounds(10, 86, 137, 14);
+		SettingsPanel.add(lblNewLabel_4);
+		
+		passwordField_1 = new JPasswordField();
+		passwordField_1.setBounds(157, 33, 254, 20);
+		SettingsPanel.add(passwordField_1);
+		
+		passwordField_2 = new JPasswordField();
+		passwordField_2.setBounds(157, 58, 254, 20);
+		SettingsPanel.add(passwordField_2);
+		
+		passwordField_3 = new JPasswordField();
+		passwordField_3.setBounds(157, 83, 254, 20);
+		SettingsPanel.add(passwordField_3);
+		
+		JButton button_17 = new JButton("Za\u0142\u00F3\u017C konto");
+		button_17.setBounds(446, 232, 164, 23);
+		SettingsPanel.add(button_17);
+		
+		passwordField_4 = new JPasswordField();
+		passwordField_4.setBounds(157, 208, 254, 20);
+		SettingsPanel.add(passwordField_4);
+		
+		JLabel label_31 = new JLabel("Powt\u00F3rz has\u0142o pocz\u0105tkowe:");
+		label_31.setBounds(10, 211, 137, 14);
+		SettingsPanel.add(label_31);
+		
+		JLabel label_40 = new JLabel("Has\u0142o pocz\u0105tkowe:");
+		label_40.setBounds(10, 186, 137, 14);
+		SettingsPanel.add(label_40);
+		
+		passwordField_5 = new JPasswordField();
+		passwordField_5.setBounds(157, 180, 254, 20);
+		SettingsPanel.add(passwordField_5);
+		
+		textField_29 = new JTextField();
+		textField_29.setColumns(10);
+		textField_29.setBounds(157, 154, 254, 20);
+		SettingsPanel.add(textField_29);
+		
+		JLabel label_41 = new JLabel("Login:");
+		label_41.setBounds(10, 161, 137, 14);
+		SettingsPanel.add(label_41);
+		
+		JLabel label_42 = new JLabel("Nowe konto:");
+		label_42.setBounds(10, 136, 137, 14);
+		SettingsPanel.add(label_42);
+		
+		JLabel lblTypKonta = new JLabel("Typ konta:");
+		lblTypKonta.setBounds(10, 236, 137, 14);
+		SettingsPanel.add(lblTypKonta);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(157, 233, 254, 20);
+		SettingsPanel.add(comboBox);
+		
+		JLabel label_43 = new JLabel("Login:");
+		label_43.setBounds(10, 333, 137, 14);
+		SettingsPanel.add(label_43);
+		
+		JLabel lblUsuKonto = new JLabel("Usu\u0144 konto:");
+		lblUsuKonto.setBounds(10, 308, 137, 14);
+		SettingsPanel.add(lblUsuKonto);
+		
+		textField_30 = new JTextField();
+		textField_30.setColumns(10);
+		textField_30.setBounds(157, 330, 254, 20);
+		SettingsPanel.add(textField_30);
+		
+		JButton btnUsuKonto = new JButton("Usu\u0144 konto");
+		btnUsuKonto.setBounds(446, 329, 164, 23);
+		SettingsPanel.add(btnUsuKonto);
 		tabGuardian.addIconToMap("Ustawienia", new ImageIcon(MainWindow.class.getResource("/resources/ustawienia.png")));
 		panelsNames.add("Ustawienia");
-		TabPanel.addTab("Ustawienia", new ImageIcon(MainWindow.class.getResource("/resources/ustawienia.png")), SettingsPanel, null);	
 
 		HashMap<String, JPanel> panels = tabGuardian.getPanelMap();
 		panels.remove("Menu");
