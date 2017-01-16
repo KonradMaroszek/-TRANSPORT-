@@ -1427,15 +1427,16 @@ public class MainWindow {
 		VehicleRoutes_tab = new JTable();
 		VehicleRoutes_tab.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null},
+				{null, null, null, null},
 			},
 			new String[] {
-				"Czas wyjazdu", "Miejsce wyjazdu", "Czas trwania trasy"
+				"Czas wyjazdu", "Miejsce wyjazdu", "Zaladowane", "Czas trwania trasy"
 			}
 		));
 		VehicleRoutes_tab.getColumnModel().getColumn(0).setPreferredWidth(120);
 		VehicleRoutes_tab.getColumnModel().getColumn(1).setPreferredWidth(114);
 		VehicleRoutes_tab.getColumnModel().getColumn(2).setPreferredWidth(97);
+		VehicleRoutes_tab.getColumnModel().getColumn(3).setPreferredWidth(122);
 		VehicleRoutesScrollPane.setViewportView(VehicleRoutes_tab);
 		VehiclesMainTextCapacity = new JTextField();
 		VehiclesMainTextCapacity.setColumns(10);
@@ -2924,30 +2925,14 @@ public class MainWindow {
 		model.addColumn("Koszt naprawy");
 		model.addColumn("Naprawione czesci");
 		String get_naprawy_cmd = "Select * from naprawy where id_pojazdu = "+car.get("id_pojazdu").toString();
-		String get_routes_cmd = "Select * from przejazdy where id_pojazdu = "+car.get("id_pojazdu").toString();
-		DefaultTableModel model_tras = new DefaultTableModel();
-		model_tras.addColumn("Czas wyjazdu");
-		model_tras.addColumn("Miejsce wyjazdu");
-		model_tras.addColumn("Czas trwania trasy");
 		try {
 			ArrayList<Map<String, Object>> naprawy = executeCommandAndWaitForOutput(get_naprawy_cmd).get();
 			for(Map<String, Object> naprawa : naprawy )
 			{
 				model.addRow(new Object[] {naprawa.get("czas_naprawy").toString(), naprawa.get("koszt").toString(), naprawa.get("naprawione_czesci").toString()});
 			}
-			
 			model.addRow(new Object[] {null,null,null});
 			naprawy_tab.setModel(model);
-			ArrayList<Map<String, Object>> trasy = executeCommandAndWaitForOutput(get_routes_cmd).get();
-			for ( Map<String, Object> trasa:trasy)
-			{
-				Map<String, Object> miejsce = executeCommandAndWaitForOutput("select * from adresy where id_adresu = "+trasa.get("id_miejsca_startowego").toString()).get().get(0);
-				String miejsce_wyjazdu = "" + miejsce.get("miasto").toString() + " "+miejsce.get("ulica").toString() + " " + miejsce.get("nr_lokalu").toString();
-				model_tras.addRow(new Object[] {
-						trasa.get("data_przejazdu").toString().split(" ")[0], miejsce_wyjazdu, trasa.get("szacowany_czas").toString()
-				});
-			}
-			VehicleRoutes_tab.setModel(model_tras);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1436,6 +1436,7 @@ public class MainWindow {
 		VehicleRoutes_tab.getColumnModel().getColumn(0).setPreferredWidth(120);
 		VehicleRoutes_tab.getColumnModel().getColumn(1).setPreferredWidth(114);
 		VehicleRoutes_tab.getColumnModel().getColumn(2).setPreferredWidth(97);
+		VehicleRoutes_tab.getColumnModel().getColumn(3).setPreferredWidth(122);
 		VehicleRoutesScrollPane.setViewportView(VehicleRoutes_tab);
 		VehiclesMainTextCapacity = new JTextField();
 		VehiclesMainTextCapacity.setColumns(10);

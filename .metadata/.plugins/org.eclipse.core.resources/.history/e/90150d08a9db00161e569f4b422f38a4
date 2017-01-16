@@ -147,7 +147,7 @@ public class MainWindow {
 	private JTextField InstytutionInformationTextCountry;
 	private JTable InstytutionEquipmentTable;
 	private JTextField InstytutionInformationTextPostalCode;
-	private String current_car_id = "";
+	private String current_car_id;
 	TabGuardian tabGuardian;
 	ArrayList<String> panelsNames;
 	JTabbedPane tabPanel;
@@ -1390,24 +1390,9 @@ public class MainWindow {
 				String czas_naprawy = model.getValueAt(model.getRowCount() -1, 0).toString();
 				String koszt = model.getValueAt(model.getRowCount() -1, 1).toString();
 				String naprawione_czesci = model.getValueAt(model.getRowCount() -1, 2).toString();
-				String nr_rej = VehiclesInformationTextRegistrationNumber.getText();
-				String marka = VehiclesInformationTextBrand.getText();
-				String car_model = VehiclesInformationTextModel.getText();
 				
-				String get_pojazd_id = "Select pojazdy.id_pojazdu from pojazdy join karty_techniczne_pojazdow on pojazdy.id_pojazdu = karty_techniczne_pojazdow.id_pojazdu join dowody_rejestracyjne on pojazdy.id_pojazdu = dowody_rejestracyjne.id_pojazdu ";
-				get_pojazd_id += "where marka = '"+marka+"' and model = '"+car_model+"' and nr_rejestracyjny = '"+nr_rej+"'";
-				String pojazd_id = "";
-				try {
-					pojazd_id = executeCommandAndWaitForOutput(get_pojazd_id).get().get(0).get("id_pojazdu").toString();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				String insert_naprawa = "Insert into naprawy (id_pojazdu, naprawione_czesci, koszt, czas_naprawy, id_naprawy) values ";
-				insert_naprawa += "("+pojazd_id+", '"+naprawione_czesci+"', "+koszt+", "+czas_naprawy+", naprawa_id_seq.nextval)";
+				insert_naprawa += "("+current_car_id+", '"+naprawione_czesci+"', "+koszt+", "+czas_naprawy+", naprawa_id_seq.nextval)";
 				insert_to_db(insert_naprawa, "", "");
 				System.out.println(insert_naprawa);
 				model.addRow(new Object[] {null,null,null});
@@ -1427,15 +1412,16 @@ public class MainWindow {
 		VehicleRoutes_tab = new JTable();
 		VehicleRoutes_tab.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null},
+				{null, null, null, null},
 			},
 			new String[] {
-				"Czas wyjazdu", "Miejsce wyjazdu", "Czas trwania trasy"
+				"Czas wyjazdu", "Miejsce wyjazdu", "Zaladowane", "Czas trwania trasy"
 			}
 		));
 		VehicleRoutes_tab.getColumnModel().getColumn(0).setPreferredWidth(120);
 		VehicleRoutes_tab.getColumnModel().getColumn(1).setPreferredWidth(114);
 		VehicleRoutes_tab.getColumnModel().getColumn(2).setPreferredWidth(97);
+		VehicleRoutes_tab.getColumnModel().getColumn(3).setPreferredWidth(122);
 		VehicleRoutesScrollPane.setViewportView(VehicleRoutes_tab);
 		VehiclesMainTextCapacity = new JTextField();
 		VehiclesMainTextCapacity.setColumns(10);
@@ -2900,7 +2886,6 @@ public class MainWindow {
 		model.addRow(new Object[] {null, null, null, null, null});
 		dostawy_tab.setModel(model);
 	}
-			
 	private void set_car_informations(Map<String, Object> car) {
 		VehiclesMainTextFuel.setText(car.get("spalanie").toString());
 		VehiclesInformationTextTopSpeed.setText(car.get("max_predkosc").toString());
@@ -2916,7 +2901,7 @@ public class MainWindow {
 		VehiclesInformationTextEngineNumber.setText(car.get("nr_silnika").toString());
 		VehiclesInformationTextEngineCapacity.setText(car.get("pojemnosc_silnika").toString());
 		VehiclesInformationTextOil.setText(car.get("zalecany_olej").toString());
-		VehiclesInformationTextMilage.setText(car.get("przebieg_w_km").toString());
+		VehiclesInformationTextMilage.setText(car.get("przebieg").toString());
 		VehiclesMainTextOverview.setText(car.get("nastepny_przeglad").toString().split(" ")[0]);
 		current_car_id = car.get("id_pojazdu").toString();
 		DefaultTableModel model = new DefaultTableModel();
@@ -2924,30 +2909,13 @@ public class MainWindow {
 		model.addColumn("Koszt naprawy");
 		model.addColumn("Naprawione czesci");
 		String get_naprawy_cmd = "Select * from naprawy where id_pojazdu = "+car.get("id_pojazdu").toString();
-		String get_routes_cmd = "Select * from przejazdy where id_pojazdu = "+car.get("id_pojazdu").toString();
-		DefaultTableModel model_tras = new DefaultTableModel();
-		model_tras.addColumn("Czas wyjazdu");
-		model_tras.addColumn("Miejsce wyjazdu");
-		model_tras.addColumn("Czas trwania trasy");
 		try {
 			ArrayList<Map<String, Object>> naprawy = executeCommandAndWaitForOutput(get_naprawy_cmd).get();
 			for(Map<String, Object> naprawa : naprawy )
 			{
 				model.addRow(new Object[] {naprawa.get("czas_naprawy").toString(), naprawa.get("koszt").toString(), naprawa.get("naprawione_czesci").toString()});
 			}
-			
-			model.addRow(new Object[] {null,null,null});
 			naprawy_tab.setModel(model);
-			ArrayList<Map<String, Object>> trasy = executeCommandAndWaitForOutput(get_routes_cmd).get();
-			for ( Map<String, Object> trasa:trasy)
-			{
-				Map<String, Object> miejsce = executeCommandAndWaitForOutput("select * from adresy where id_adresu = "+trasa.get("id_miejsca_startowego").toString()).get().get(0);
-				String miejsce_wyjazdu = "" + miejsce.get("miasto").toString() + " "+miejsce.get("ulica").toString() + " " + miejsce.get("nr_lokalu").toString();
-				model_tras.addRow(new Object[] {
-						trasa.get("data_przejazdu").toString().split(" ")[0], miejsce_wyjazdu, trasa.get("szacowany_czas").toString()
-				});
-			}
-			VehicleRoutes_tab.setModel(model_tras);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
