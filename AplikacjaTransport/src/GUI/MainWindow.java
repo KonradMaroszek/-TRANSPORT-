@@ -1,7 +1,7 @@
 package GUI;
 
 import java.awt.EventQueue;
-
+import javax.swing.table.*;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JLabel;
@@ -25,12 +25,14 @@ import Commons.UserLogged;
 import Database.DatabaseConnection;
 import Database.Execute_command;
 import Database.FetchQuery;
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.JDesktopPane;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import net.miginfocom.swing.MigLayout;
+
 import java.awt.List;
 import javax.swing.JTable;
 import javax.swing.JList;
@@ -59,9 +61,22 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.BevelBorder;
 
 public class MainWindow {
-
+	private int emp_idx;
+	String id_trasy;
+	ArrayList<Map<String, Object>> cars_records;
+	private int cars_idx;
+	private int building_idx;
+	ArrayList<Map<String, Object>> buildings_records;
+	ArrayList<Map<String, Object>> przejazd_start;
+	private int przejazd_idx;
 	private JFrame frmAplikacjaTransport;
 	private JTextField EmployessMainTextName;
 	private JTextField EmployessMainTextSurname;
@@ -99,8 +114,6 @@ public class MainWindow {
 	private JTextField textField_37;
 	private JTextField textField_38;
 	private JTextField textField_39;
-	private JTable EmployessTasksHistoryTable;
-	private JTable EmployessVehiclesTable;
 	private JTable EmployessCalendarTable;
 	private JTextField VehiclesMainTextCapacity;
 	private JTextField VehiclesInformationTextTopSpeed;
@@ -117,11 +130,7 @@ public class MainWindow {
 	private JTextField VehiclesInformationTextEngineCapacity;
 	private JTextField VehiclesInformationTextOil;
 	private JTextField VehiclesInformationTextMilage;
-	private JTable table;
 	private Choice EmployessPersonalDataChoiceConctractOfEmployment;
-	
-	private JTable table_1;
-	private JTable InstytutionEmployeesTable;
 	private JTextField InstytutionMainTextCountry;
 	private JTextField InstytutionInformationTextName;
 	private JTextField InstytutionInformationYear;
@@ -142,36 +151,21 @@ public class MainWindow {
 	TabGuardian tabGuardian;
 	ArrayList<String> panelsNames;
 	JTabbedPane tabPanel;
-	private JTextField textField;
+	private JTextField loginField;
 	private JPasswordField passwordField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
-	private JTextField textField_8;
-	private JTextField textField_9;
-	private JTextField textField_10;
-	private JTextField textField_11;
-	private JTextField textField_12;
-	private JTextField textField_13;
-	private JTextField textField_14;
-	private JTextField textField_15;
-	private JTextField textField_16;
-	private JTextField textField_17;
-	private JTextField textField_18;
-	private JTextField textField_19;
-	private JTextField textField_20;
-	private JTextField textField_21;
-	private JTextField textField_22;
-	private JTextField textField_23;
-	private JTextField textField_24;
-	private JTextField textField_25;
-	private JTextField textField_26;
-	private JTextField textField_27;
-	private JTextField textField_28;
+	ArrayList<Map<String, Object>> Employees_records;
+	private JTextField docelowe_ulica;
+	private JTextField docelowe_nr_lokalu;
+	private JTextField docelowe_miasto;
+	private JTextField docelowe_wojewodztwo;
+	private JTextField docelowe_kraj;
+	private JTextField docelowe_kod_pocztowy;
+	private JTextField start_ulica;
+	private JTextField start_nr_lokalu;
+	private JTextField start_miasto;
+	private JTextField start_wojewodztwo;
+	private JTextField start_kraj;
+	private JTextField start_kod_pocztowy;
 	private JPasswordField passwordField_1;
 	private JPasswordField passwordField_2;
 	private JPasswordField passwordField_3;
@@ -179,7 +173,6 @@ public class MainWindow {
 	private JPasswordField passwordField_5;
 	private JTextField textField_29;
 	private JTextField textField_30;
-	private JTable table_2;
 	private JTextField textField_31;
 	private JTextField textField_32;
 	private JTextField textField_33;
@@ -187,6 +180,20 @@ public class MainWindow {
 	private JTextField textField_35;
 	private JTextField textField_36;
 	private JTextField textField_40;
+	private JTable emp_table;
+	private JTable dostawy_tab;
+	private JTextField data_wyjazdu;
+	private JTextField czas_trwania_trasy;
+	private JTextField trasa_zaladownosc;
+	private JTable naprawy_tab;
+	private JTable VehicleRoutes_tab;
+	private JTable employes_vehicles_table;
+	private JTable EmployeesTaskHistoryTable;
+	private JTable faktury_table;
+	private JTextField odleglosc_trasy;
+	private JTextField marka_pojazdu;
+	private JTextField model_pojazdu;
+	private JTextField ladownosc_pojazdu;
 
 	/**
 	 * Launch the application.
@@ -218,6 +225,8 @@ public class MainWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
+		
 		frmAplikacjaTransport = new JFrame();
 		frmAplikacjaTransport.setResizable(false);
 		frmAplikacjaTransport.setTitle("Aplikacja Transport");
@@ -242,9 +251,9 @@ public class MainWindow {
 		JLabel lblLogin = new JLabel("Login");
 		MainMenuPanle.add(lblLogin, "cell 0 0,alignx trailing");
 		
-		textField = new JTextField();
-		MainMenuPanle.add(textField, "cell 1 0,growx");
-		textField.setColumns(10);
+		loginField = new JTextField();
+		MainMenuPanle.add(loginField, "cell 1 0,growx");
+		loginField.setColumns(10);
 		
 		JLabel lblHaso = new JLabel("Has\u0142o");
 		MainMenuPanle.add(lblHaso, "cell 0 1,alignx trailing");
@@ -256,9 +265,33 @@ public class MainWindow {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// TUTAJ SPRAWDZASZ KTO SIÊ LOGUJE!  
-				
-				UserLogged.setUserType(UserLogged.UserType.ADMIN); // przypisujesz enuma tutaj
-				
+//				String login = loginField.getText();
+//				String password = new String(passwordField.getPassword());
+//				String privilege = "-";
+//				String cmd = "Select uprawnienia from pracownicy where login = '"+login+"' and haslo = '"+password+"'";
+//				System.out.println(cmd);
+//				try {
+//					Future<ArrayList<Map<String, Object>>> record = executeCommandAndWaitForOutput(cmd);
+//					privilege = record.get().get(0).get("uprawnienia").toString();
+//				} catch (Exception e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				switch(privilege.toUpperCase())
+//				{
+//				case "ADMIN" : 
+//					UserLogged.setUserType(UserLogged.UserType.ADMIN);
+//					break;
+//				case "EMPLOYEE" : 
+//					UserLogged.setUserType(UserLogged.UserType.EMPLOYEE);
+//					break;
+//				case "FORWARDER" :
+//					UserLogged.setUserType(UserLogged.UserType.FORWARDER);
+//					break;
+//				default:
+//					return;
+//				}
+				UserLogged.setUserType(UserLogged.UserType.ADMIN); // TODO wyrzucic ta linijke i odkomentowac poczatek
 				HashMap<String, JPanel> panels = tabGuardian.getPanelMap();
 				HashMap<String, ImageIcon> icons = tabGuardian.getIconsMap();
 				
@@ -371,10 +404,10 @@ public class MainWindow {
 					Future<ArrayList<Map<String, Object>>> result = get_personal_data();
 					
 					try {
-						Map<String, Object> output = result.get().get(0); // TODO switching output records
-						Future<ArrayList<Map<String, Object>>> result2 = get_building_data(output);
-						setPersonalDataTextFields(output);
-						set_building_adress(result2);
+						Employees_records = result.get();
+						emp_idx = 0;
+						Map<String, Object> output = Employees_records.get(emp_idx); // TODO switching output records
+						set_employee_informations(output);
 						
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
@@ -389,6 +422,8 @@ public class MainWindow {
 					}
 
 			}
+
+			
 
 			
 		});
@@ -414,10 +449,11 @@ public class MainWindow {
 				String wojewodztwo = EmployessPersonalDataTextLand.getText();
 				String kraj = EmployessPersonalDataTextCountry.getText();
 				String adres_pracy = EmployessPersonalDataTextWorkplaceAddress.getText();
-				String typ_umowy = EmployessPersonalDataChoiceConctractOfEmployment.getSelectedItem().toString();
+//				String typ_umowy = EmployessPersonalDataChoiceConctractOfEmployment.getSelectedItem().toString();
+				String typ_umowy = "O prace";
 				String check_existing_cmd = "select * from dane_osobowe join pracownicy " +
-						                    "on dane_osobowe.daneid = pracownicy.id_danych_osobowych join adres" +
-									   	    " on pracownicy.ID_ADRESU = adres.adresid where " +
+						                    "on dane_osobowe.id_danych_osobowych = pracownicy.id_danych_osobowych join adresy" +
+									   	    " on pracownicy.ID_ADRESU = adresy.id_adresu where " +
 						                    "dane_osobowe.imie = '"+imie+"' and dane_osobowe.nazwisko = '"+nazwisko+"' and dane_osobowe.pesel = '"+pesel+"'";
 				Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(check_existing_cmd);
 				int size = 0;
@@ -438,11 +474,11 @@ public class MainWindow {
 						adr_id = get_adr_id().get().get(0).get("nextval").toString();
 						worker_id = get_worker_id().get().get(0).get("nextval").toString();
 						data_id = get_data_id().get().get(0).get("nextval").toString();
-						String get_building_cmd ="Select * from budynki join adres on budynki.id_adresu = adres.adresid where ";
+						String get_building_cmd ="Select * from budynki join adresy on budynki.id_adresu = adresy.id_adresu where ";
 						get_building_cmd += "ulica = '"+adres_pracy.split(" ")[0]+"' and nr_lokalu = "+adres_pracy.split(" ")[1];
 						Future<ArrayList<Map<String, Object>>> building = executeCommandAndWaitForOutput(get_building_cmd);
-						building_id = building.get().get(0).get("budynkiid").toString();
-						car_id = "1";
+						building_id = building.get().get(0).get("id_budynku").toString();
+						car_id = "19";
 						
 
 						
@@ -459,7 +495,9 @@ public class MainWindow {
 							kraj, adr_id);
 					String insert_data_cmd = get_insert_data_cmd(imie, nazwisko, drugie_imie, data_ur, nr_tel, pesel,
 							nr_dowodu, data_id);
-
+					System.out.println(insert_worker_cmd);
+					System.out.println(insert_adres_cmd);
+					System.out.println(insert_data_cmd);
 					insert_to_db(insert_worker_cmd, insert_adres_cmd, insert_data_cmd);
 				}
 				else
@@ -498,18 +536,18 @@ public class MainWindow {
 				
 				try {
 					String check_existing_cmd = "select * from dane_osobowe join pracownicy " +
-		                    "on dane_osobowe.daneid = pracownicy.id_danych_osobowych join adres" +
-					   	    " on pracownicy.ID_ADRESU = adres.adresid where " +
+		                    "on dane_osobowe.id_danych_osobowych = pracownicy.id_danych_osobowych join adresy" +
+					   	    " on pracownicy.ID_ADRESU = adresy.ID_ADRESU where " +
 		                    "dane_osobowe.imie = '"+imie+"' and dane_osobowe.nazwisko = '"+nazwisko+"' and dane_osobowe.pesel = '"+pesel+"'";
 					Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(check_existing_cmd);
 					String id_adr, id_danych, id_pracownika;
 					id_adr = id_danych = id_pracownika = "";
 					id_adr = result.get().get(0).get("id_adresu").toString();
 					id_danych = result.get().get(0).get("id_danych_osobowych").toString();
-					id_pracownika = result.get().get(0).get("pracownicyid").toString();
-					String del_adr_cmd = "delete from adres where adresid = "+id_adr;
-					String del_dane_cmd = "delete from dane_osobowe where daneid = "+id_danych;
-					String del_pracownik_cmd = "delete from pracownicy where pracownicyid = "+id_pracownika;
+					id_pracownika = result.get().get(0).get("id_pracownika").toString();
+					String del_adr_cmd = "delete from adresy where id_adresu = "+id_adr;
+					String del_dane_cmd = "delete from dane_osobowe where id_danych_osobowych = "+id_danych;
+					String del_pracownik_cmd = "delete from pracownicy where id_pracownika = "+id_pracownika;
 					insert_to_db(del_pracownik_cmd, del_adr_cmd, del_dane_cmd);
 					
 				} catch (InterruptedException e1) {
@@ -726,25 +764,52 @@ public class MainWindow {
 		EmployessTabbedPanel.addTab("dost\u0119pne pojazdy", new ImageIcon(MainWindow.class.getResource("/images32x32/pojazd.png")), EmployessVehicles, null);
 		EmployessVehicles.setLayout(null);
 		
-		EmployessVehiclesTable = new JTable();
-		EmployessVehiclesTable.setBounds(10, 11, 859, 293);
-		EmployessVehicles.add(EmployessVehiclesTable);
-		
 		JButton EmployessVehiclesButtonDetails = new JButton("Szczeg\u00F3\u0142y...");
 		EmployessVehiclesButtonDetails.setBounds(870, 11, 167, 23);
 		EmployessVehicles.add(EmployessVehiclesButtonDetails);
+		
+		JScrollPane EmployesVehiclesScrollPane = new JScrollPane();
+		EmployesVehiclesScrollPane.setBounds(10, 8, 709, 293);
+		EmployessVehicles.add(EmployesVehiclesScrollPane);
+		
+		employes_vehicles_table = new JTable();
+		employes_vehicles_table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null},
+			},
+			new String[] {
+				"Marka", "Model", "Rocznik", "Ladownosc", "Spalanie", "Masa wlasna"
+			}
+		));
+		employes_vehicles_table.setBounds(402, 284, -396, -268);
+		EmployesVehiclesScrollPane.setViewportView(employes_vehicles_table);
 		
 		JPanel EmployessTasksHistory = new JPanel();
 		EmployessTabbedPanel.addTab("historia zada\u0144", new ImageIcon(MainWindow.class.getResource("/images32x32/zegarhistoria.png")), EmployessTasksHistory, null);
 		EmployessTasksHistory.setLayout(null);
 		
-		EmployessTasksHistoryTable = new JTable();
-		EmployessTasksHistoryTable.setBounds(10, 11, 859, 293);
-		EmployessTasksHistory.add(EmployessTasksHistoryTable);
-		
 		JButton EmployessTasksHistoryButtonDetails = new JButton("Szczeg\u00F3\u0142y...");
 		EmployessTasksHistoryButtonDetails.setBounds(870, 11, 167, 23);
 		EmployessTasksHistory.add(EmployessTasksHistoryButtonDetails);
+		
+		JScrollPane EmployeesTaskHistoryScrollPane = new JScrollPane();
+		EmployeesTaskHistoryScrollPane.setBounds(26, 38, 680, 247);
+		EmployessTasksHistory.add(EmployeesTaskHistoryScrollPane);
+		
+		EmployeesTaskHistoryTable = new JTable();
+		EmployeesTaskHistoryTable.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null},
+			},
+			new String[] {
+				"Miejsce wyjazdu", "Czas wyjazdu", "Czas powrotu", "Czas trwania kursu", "Samochod"
+			}
+		));
+		EmployeesTaskHistoryTable.getColumnModel().getColumn(0).setPreferredWidth(140);
+		EmployeesTaskHistoryTable.getColumnModel().getColumn(1).setPreferredWidth(132);
+		EmployeesTaskHistoryTable.getColumnModel().getColumn(2).setPreferredWidth(105);
+		EmployeesTaskHistoryTable.getColumnModel().getColumn(3).setPreferredWidth(119);
+		EmployeesTaskHistoryScrollPane.setViewportView(EmployeesTaskHistoryTable);
 		
 		JPanel EmployessCalendar = new JPanel();
 		EmployessTabbedPanel.addTab("kalendarz pracy", new ImageIcon(MainWindow.class.getResource("/images32x32/kalendarz.png")), EmployessCalendar, null);
@@ -770,15 +835,47 @@ public class MainWindow {
 		EmployessMainRadioButtonEditMode.setBounds(347, 38, 200, 23);
 		EmployeesPanel.add(EmployessMainRadioButtonEditMode);
 		
-		JButton button_4 = new JButton("");
-		button_4.setIcon(new ImageIcon(MainWindow.class.getResource("/images32x32/leftarrow32.png")));
-		button_4.setBounds(773, 11, 144, 35);
-		EmployeesPanel.add(button_4);
+		JButton prev_employee = new JButton("");
+		prev_employee.setIcon(new ImageIcon(MainWindow.class.getResource("/images32x32/leftarrow32.png")));
+		prev_employee.setBounds(773, 11, 144, 35);
+		prev_employee.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				try {
+					if (emp_idx > 0 ) 	emp_idx -= 1;
+					set_employee_informations(Employees_records.get(emp_idx));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		});
+		EmployeesPanel.add(prev_employee);
 		
-		JButton button_5 = new JButton("");
-		button_5.setIcon(new ImageIcon(MainWindow.class.getResource("/images32x32/rightarrow32.png")));
-		button_5.setBounds(915, 11, 144, 35);
-		EmployeesPanel.add(button_5);
+		JButton next_employee = new JButton("");
+		next_employee.setIcon(new ImageIcon(MainWindow.class.getResource("/images32x32/rightarrow32.png")));
+		next_employee.setBounds(915, 11, 144, 35);
+		next_employee.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+
+				try {
+					
+					if (emp_idx < Employees_records.size() -1 ) emp_idx += 1;
+					set_employee_informations(Employees_records.get(emp_idx));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		});
+		EmployeesPanel.add(next_employee);
 		
 		JPanel VehiclesPanel = new JPanel();
 		tabGuardian.addPanelToMap("Pojazdy", VehiclesPanel);
@@ -882,8 +979,8 @@ public class MainWindow {
 				String id_wlasciciela = "1";
 				
 				
-				String check_existing_cmd = "Select * from pojazdy join dowod_rejestracyjny_pojazdu on pojazdy.pojazdyid = dowod_rejestracyjny_pojazdu.id_pojazdu ";
-				check_existing_cmd += "join karta_techniczna_pojazdu on pojazdy.pojazdyid = karta_techniczna_pojazdu.id_pojazdu where ";
+				String check_existing_cmd = "Select * from pojazdy join dowody_rejestracyjne on pojazdy.id_pojazdu = dowody_rejestracyjne.id_pojazdu ";
+				check_existing_cmd += "join karty_techniczne_pojazdow on pojazdy.id_pojazdu = karty_techniczne_pojazdow.id_pojazdu where ";
 				check_existing_cmd += "marka = '"+marka+"' and model = '"+model+"' and nr_rejestracyjny='"+nr_rejestracyjny+"'";
 				
 				Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(check_existing_cmd);
@@ -902,6 +999,7 @@ public class MainWindow {
 					String pojazd_id = "";
 					try {
 						pojazd_id = get_car_id().get().get(0).get("nextval").toString();
+			
 					} catch (InterruptedException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -912,14 +1010,15 @@ public class MainWindow {
 					String insert_pojazd_cmd = "";
 					String insert_karta_cmd = "";
 					String insert_dowod_cmd = "";
-					insert_pojazd_cmd += "Insert into pojazdy ( id_budynku, nastepny_przeglad, pojazdyid, id_ostatniej_naprawy) ";
+					insert_pojazd_cmd += "Insert into pojazdy ( id_budynku, nastepny_przeglad, id_pojazdu, id_ostatniej_naprawy) ";
 					System.out.println(new Date().toString());
 					insert_pojazd_cmd += "values ("+id_budynku+", TO_DATE('"+nastepny_przeglad+"', 'yyyy-mm-dd'), "+pojazd_id+", "+id_nastepnej_naprawy+")";
-					insert_karta_cmd += "insert into karta_techniczna_pojazdu ";
-					insert_karta_cmd += "(id_pojazdu, spalanie, rok_produkcji, max_ladownosc, nr_nadwozia, nr_silnika, pojemnosc_silnika, przebieg_w_km, max_predkosc, kraj_produkcji, pierwsza_rejestracja, masa_wlasna, zalecany_olej, rodzaj_napedu, rodzaj_naczepy, model) ";
-					insert_karta_cmd += "values ("+pojazd_id+", "+spalanie+", "+rocznik+", "+maks_ladownosc+", "+nr_podwozia+", "+nr_silnika+", "+pojemnosc_silnika+", "+przebieg+", "+maks_predkosc+", '"+kraj+"', TO_DATE('"+pierwsza_rejestracja+"', 'yyyy-mm-dd'), "+masa_wlasna+", '"+olej+"', '"+rodzaj_napedu+"', '"+rodzaj_naczepy+"', '"+model+"')";
-					insert_dowod_cmd += "insert into dowod_rejestracyjny_pojazdu (marka, nr_rejestracyjny, id_wlasciciela, rok_produkcji, id_pojazdu) ";
-					insert_dowod_cmd += "values ('"+marka+"', '"+nr_rejestracyjny+"', "+id_wlasciciela+", "+rocznik+", "+pojazd_id+")";
+					insert_karta_cmd += "insert into karty_techniczne_pojazdow ";
+					insert_karta_cmd += "(id_pojazdu, spalanie, rok_produkcji, max_ladownosc, nr_nadwozia, nr_silnika, pojemnosc_silnika, przebieg_w_km, max_predkosc, kraj_produkcji, pierwsza_rejestracja, masa_wlasna, zalecany_olej, rodzaj_napedu, rodzaj_naczepy, model, id_karty) ";
+					insert_karta_cmd += "values ("+pojazd_id+", "+spalanie+", "+rocznik+", "+maks_ladownosc+", "+nr_podwozia+", "+nr_silnika+", "+pojemnosc_silnika+", "+przebieg+", "+maks_predkosc+", '"+kraj+"', TO_DATE('"+pierwsza_rejestracja+"', 'yyyy-mm-dd'), "+masa_wlasna+", '"+olej+"', '"+rodzaj_napedu+"', '"+rodzaj_naczepy+"', '"+model+"', karta_techniczna_id_seq.nextval)";
+					insert_dowod_cmd += "insert into dowody_rejestracyjne (marka, nr_rejestracyjny, id_wlasciciela, id_pojazdu, id_dowodu) ";
+					insert_dowod_cmd += "values ('"+marka+"', '"+nr_rejestracyjny+"', "+id_wlasciciela+", "+pojazd_id+", dowod_rejestracyjny_id_seq.nextval)";
+					System.out.println(insert_pojazd_cmd);
 					System.out.println(insert_dowod_cmd);
 					System.out.println(insert_karta_cmd);
 					insert_to_db(insert_pojazd_cmd, insert_karta_cmd, insert_dowod_cmd);
@@ -944,8 +1043,8 @@ public class MainWindow {
 				String przebieg =  VehiclesMainTextMileage.getText();
 				String spalanie = VehiclesMainTextFuel.getText();
 				String pojemnosc_silnika = VehiclesMainTextCapacity.getText();
-				String check_existing_cmd = "Select * from pojazdy join dowod_rejestracyjny_pojazdu on pojazdy.pojazdyid = dowod_rejestracyjny_pojazdu.id_pojazdu ";
-				check_existing_cmd += "join karta_techniczna_pojazdu on pojazdy.pojazdyid = karta_techniczna_pojazdu.id_pojazdu where ";
+				String check_existing_cmd = "Select * from pojazdy join dowody_rejestracyjne on pojazdy.id_pojazdu = dowody_rejestracyjne.id_pojazdu ";
+				check_existing_cmd += "join karty_techniczne_pojazdow on pojazdy.id_pojazdu = karty_techniczne_pojazdow.id_pojazdu where ";
 				String search_by = "";
 				if(!silnik.equals("")) 	{
 					if(!search_by.equals("")) search_by += "and ";
@@ -972,29 +1071,18 @@ public class MainWindow {
 
 				Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(check_existing_cmd);
 				try {
-					Map<String, Object> car = result.get().get(0);
-					VehiclesMainTextFuel.setText(car.get("spalanie").toString());
-					VehiclesInformationTextTopSpeed.setText(car.get("max_predkosc").toString());
-					VehiclesInformationTextSelfMass.setText(car.get("masa_wlasna").toString());
-					VehiclesInformationTextChassisNumber.setText(car.get("nr_nadwozia").toString());
-					VehiclesInformationTextMaxCapacity.setText(car.get("max_ladownosc").toString());
-					VehiclesInformationTextRegistrationNumber.setText(car.get("nr_rejestracyjny").toString());
-					VehiclesInformationTextFirstRegistration.setText(car.get("pierwsza_rejestracja").toString().split(" ")[0]);
-					VehiclesInformationTextCountry.setText(car.get("kraj_produkcji").toString());
-					VehiclesInformationTextYear.setText(car.get("rok_produkcji").toString());
-					VehiclesInformationTextModel.setText(car.get("model").toString());
-					VehiclesInformationTextBrand.setText(car.get("marka").toString());
-					VehiclesInformationTextEngineNumber.setText(car.get("nr_silnika").toString());
-					VehiclesInformationTextEngineCapacity.setText(car.get("pojemnosc_silnika").toString());
-					VehiclesInformationTextOil.setText(car.get("zalecany_olej").toString());
-					VehiclesInformationTextMilage.setText(car.get("przebieg").toString());
-					VehiclesMainTextOverview.setText(car.get("nastepny_przeglad").toString().split(" ")[0]);
+					
+					cars_records = result.get();
+					cars_idx = 0;
+					set_car_informations(cars_records.get(cars_idx));
 					
 				}  catch (Exception e1) {
 					// TODO Auto-generated catch block
 					System.out.println("No car found");
 				}
 			}
+
+			
 			
 		});
 		VehiclesPanel.add(VehiclesMainButtonSearch);
@@ -1010,16 +1098,16 @@ public class MainWindow {
 				String model = VehiclesInformationTextModel.getText();
 				String marka = VehiclesInformationTextBrand.getText();	
 				
-				String check_existing_cmd = "Select * from pojazdy join dowod_rejestracyjny_pojazdu on pojazdy.pojazdyid = dowod_rejestracyjny_pojazdu.id_pojazdu ";
-				check_existing_cmd += "join karta_techniczna_pojazdu on pojazdy.pojazdyid = karta_techniczna_pojazdu.id_pojazdu where ";
+				String check_existing_cmd = "Select * from pojazdy join dowody_rejestracyjne on pojazdy.id_pojazdu = dowody_rejestracyjne.id_pojazdu ";
+				check_existing_cmd += "join karty_techniczne_pojazdow on pojazdy.id_pojazdu = karty_techniczne_pojazdow.id_pojazdu where ";
 				check_existing_cmd += "marka = '"+marka+"' and model = '"+model+"' and nr_rejestracyjny='"+nr_rejestracyjny+"'";
 
 				Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(check_existing_cmd);
 				try {
-					String id_pojazdu = result.get().get(0).get("pojazdyid").toString();
-					String del_car_cmd = "delete from pojazdy where pojazdyid = "+id_pojazdu;
-					String del_dowod_cmd = "delete from dowod_rejestracyjny_pojazdu where id_pojazdu = "+id_pojazdu;
-					String del_karta_cmd = "delete from karta_techniczna_pojazdu where id_pojazdu = "+id_pojazdu;
+					String id_pojazdu = result.get().get(0).get("id_pojazdu").toString();
+					String del_car_cmd = "delete from pojazdy where id_pojazdu = "+id_pojazdu;
+					String del_dowod_cmd = "delete from dowody_rejestracyjne where id_pojazdu = "+id_pojazdu;
+					String del_karta_cmd = "delete from karty_techniczne_pojazdow where id_pojazdu = "+id_pojazdu;
 					insert_to_db(del_car_cmd, del_dowod_cmd, del_karta_cmd);
 				}catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -1196,28 +1284,57 @@ public class MainWindow {
 		VehiclesInformation.add(VehiclesInformationTextAreaInformation);
 		
 		JPanel panel_6 = new JPanel();
-		tabbedPane_1.addTab("Przegl\u0105dy", new ImageIcon(MainWindow.class.getResource("/images32x32/Mechanikas.png")), panel_6, null);
+		tabbedPane_1.addTab("Naprawy", new ImageIcon(MainWindow.class.getResource("/images32x32/Mechanikas.png")), panel_6, null);
 		panel_6.setLayout(null);
-		
-		table = new JTable();
-		table.setBounds(10, 11, 859, 293);
-		panel_6.add(table);
 		
 		JButton button = new JButton("Szczeg\u00F3\u0142y...");
 		button.setBounds(870, 11, 167, 23);
 		panel_6.add(button);
 		
+		JScrollPane naprawyScrollPane = new JScrollPane();
+		naprawyScrollPane.setBounds(10, 14, 452, 294);
+		panel_6.add(naprawyScrollPane);
+		
+		naprawy_tab = new JTable();
+		naprawy_tab.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Czas naprawy", "Koszt naprawy", "Naprawione czesci"
+			}
+		));
+		naprawy_tab.getColumnModel().getColumn(0).setPreferredWidth(112);
+		naprawy_tab.getColumnModel().getColumn(1).setPreferredWidth(105);
+		naprawy_tab.getColumnModel().getColumn(2).setPreferredWidth(123);
+		naprawy_tab.setBounds(59, 55, 204, 76);
+		naprawyScrollPane.setViewportView(naprawy_tab);
+		
 		JPanel panel_7 = new JPanel();
 		tabbedPane_1.addTab("Trasy", new ImageIcon(MainWindow.class.getResource("/images32x32/road-map-icon-1.png")), panel_7, null);
 		panel_7.setLayout(null);
 		
-		table_1 = new JTable();
-		table_1.setBounds(10, 11, 859, 293);
-		panel_7.add(table_1);
-		
 		JButton button_1 = new JButton("Szczeg\u00F3\u0142y...");
 		button_1.setBounds(870, 11, 167, 23);
 		panel_7.add(button_1);
+		
+		JScrollPane VehicleRoutesScrollPane = new JScrollPane();
+		VehicleRoutesScrollPane.setBounds(27, 24, 465, 284);
+		panel_7.add(VehicleRoutesScrollPane);
+		
+		VehicleRoutes_tab = new JTable();
+		VehicleRoutes_tab.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null},
+			},
+			new String[] {
+				"Czas wyjazdu", "Miejsce wyjazdu", "Zaladowane", "Czas trwania trasy"
+			}
+		));
+		VehicleRoutes_tab.getColumnModel().getColumn(0).setPreferredWidth(120);
+		VehicleRoutes_tab.getColumnModel().getColumn(1).setPreferredWidth(114);
+		VehicleRoutes_tab.getColumnModel().getColumn(2).setPreferredWidth(97);
+		VehicleRoutes_tab.getColumnModel().getColumn(3).setPreferredWidth(122);
+		VehicleRoutesScrollPane.setViewportView(VehicleRoutes_tab);
 		VehiclesMainTextCapacity = new JTextField();
 		VehiclesMainTextCapacity.setColumns(10);
 		VehiclesMainTextCapacity.setBounds(348, 190, 200, 20);
@@ -1227,11 +1344,43 @@ public class MainWindow {
 		btnNewButton_2.setIcon(new ImageIcon(MainWindow.class.getResource("/images32x32/leftarrow32.png")));
 		btnNewButton_2.setSelectedIcon(new ImageIcon(MainWindow.class.getResource("/images32x32/Mechanikas.png")));
 		btnNewButton_2.setBounds(772, 5, 144, 35);
+		btnNewButton_2.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				try {
+					
+					if (cars_idx > 0) cars_idx -= 1;
+					set_car_informations(cars_records.get(cars_idx));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		});
 		VehiclesPanel.add(btnNewButton_2);
 		
 		JButton btnNastpny = new JButton("");
 		btnNastpny.setIcon(new ImageIcon(MainWindow.class.getResource("/images32x32/rightarrow32.png")));
 		btnNastpny.setBounds(914, 5, 144, 35);
+		btnNastpny.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				try {
+					
+					if (cars_idx < cars_records.size() -1 ) cars_idx += 1;
+					set_car_informations(cars_records.get(cars_idx));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		});
 		VehiclesPanel.add(btnNastpny);
 		
 		JPanel InstitutionPanel = new JPanel();
@@ -1321,15 +1470,17 @@ public class MainWindow {
 				// TODO Auto-generated method stub
 				String nazwa = InstytutionInformationTextName.getText();
 				String rok_powstania = InstytutionInformationYear.getText();
-				String check_existing_cmd = "Select * from budynki join adres on budynki.id_adresu = adres.adresid where nazwa = '"+nazwa+"' and rok_powstania = TO_DATE('"+rok_powstania+"', 'yyyy-mm-dd')";
+				String check_existing_cmd = "Select * from budynki join adresy on budynki.id_adresu = adresy.id_adresu where nazwa = '"+nazwa+"' and rok_powstania = TO_DATE('"+rok_powstania+"', 'yyyy-mm-dd')";
 				Future<ArrayList<Map<String, Object>>> existing = executeCommandAndWaitForOutput(check_existing_cmd);
 				
 				try {
-					String adres_id = existing.get().get(0).get("adresid").toString();
-					String building_id = existing.get().get(0).get("budynkiid").toString();
-					String del_building_cmd = "delete from budynki where budynkiid ="+building_id;
-					String del_adr_cmd = "delete from adres where adresid ="+adres_id;
+					String adres_id = existing.get().get(0).get("id_adresu").toString();
+					String building_id = existing.get().get(0).get("id_budynku").toString();
+					String del_building_cmd = "delete from budynki where id_budynku ="+building_id;
+					String del_adr_cmd = "delete from adresy where id_adresu ="+adres_id;
 					insert_to_db(del_building_cmd, del_adr_cmd, "");
+					System.out.println(del_building_cmd);
+					System.out.println(del_adr_cmd);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					System.out.println("Couldnt delete building or adress");
@@ -1363,7 +1514,7 @@ public class MainWindow {
 				String kod_pocztowy = InstytutionInformationTextPostalCode.getText();
 				String typ = "Placowka";
 				try {
-					String check_existing_adr_cmd = "Select * from adres where ulica ='"+ulica+"' and nr_lokalu = "+nr_lokalu+" and miasto = '"+miasto+"'";
+					String check_existing_adr_cmd = "Select * from adresy where ulica ='"+ulica+"' and nr_lokalu = "+nr_lokalu+" and miasto = '"+miasto+"'";
 					String check_existing_building_cmd = "Select * from budynki where nazwa = '"+nazwa+"' and rok_powstania = TO_DATE('"+rok_powstania+"', 'yyyy-mm-dd')";
 					Future<ArrayList<Map<String, Object>>> existing_adr = executeCommandAndWaitForOutput(check_existing_adr_cmd);
 					Future<ArrayList<Map<String, Object>>> existing_building = executeCommandAndWaitForOutput(check_existing_building_cmd);
@@ -1381,7 +1532,7 @@ public class MainWindow {
 						String insert_adres_cmd = get_insert_adres_cmd(ulica, nr_lokalu, kod_pocztowy, miasto, wojewodztwo,
 								kraj, adres_id);
 						String building_id = get_building_id().get().get(0).get("nextval").toString();
-						String insert_building_cmd = "insert into budynki (budynkiid, nazwa, typ, id_adresu, rok_powstania, dyrektor, kierownik, FIRMA_OCHRONIARSKA, bilans_miesieczny, miesieczny_obrot) ";
+						String insert_building_cmd = "insert into budynki (id_budynku, nazwa, typ, id_adresu, rok_powstania, dyrektor, kierownik, FIRMA_OCHRONIARSKA, bilans_miesieczny, miesieczny_obrot) ";
 						insert_building_cmd += "values ("+building_id+", '"+nazwa+"', '"+typ+"', "+adres_id+", TO_DATE('"+rok_powstania+"', 'yyyy-mm-dd'), '"+dyrektor+"', '"+manager+"', '"+ochrona+"', "+zysk+", "+zarobki+")";
 						System.out.println(insert_building_cmd);
 						insert_to_db(insert_adres_cmd, insert_building_cmd, "");
@@ -1409,17 +1560,17 @@ public class MainWindow {
 				String ulica = InstytutionMainTextStreet.getText();
 				String nr_lokalu = InstytutionMainTextBuldingNumber.getText();
 				String miasto = InstytutionMainTextCity.getText();
-				String cmd = "Select * from budynki join adres on budynki.id_adresu = adres.adresid where ";
+				String cmd = "Select * from budynki join adresy on budynki.id_adresu = adresy.id_adresu where ";
 				String search_by = "";
 				if(!nazwa.equals(""))
 				{
 					if(!search_by.equals("")) search_by += "and ";
-					search_by += "nazwa = '"+nazwa+"' ";
+					search_by += "nazwa like '%"+nazwa+"%' ";
 				}
 				if(!ulica.equals(""))
 				{
 					if(!search_by.equals("")) search_by += "and ";
-					search_by += "ulica = '"+ulica+"' ";
+					search_by += "ulica like '%"+ulica+"%' ";
 				}
 				if(!data_powstania.equals(""))
 				{
@@ -1429,7 +1580,7 @@ public class MainWindow {
 				if(!miasto.equals(""))
 				{
 					if(!search_by.equals("")) search_by += "and ";
-					search_by += "miasto = '"+miasto+"' ";
+					search_by += "miasto like '%"+miasto+"%' ";
 				}
 				if(!nr_lokalu.equals(""))
 				{
@@ -1440,27 +1591,9 @@ public class MainWindow {
 				System.out.println(cmd);
 				Future<ArrayList<Map<String, Object>>> existing_building = executeCommandAndWaitForOutput(cmd);
 				try {
-					Map<String, Object> building = existing_building.get().get(0);
-					InstytutionInformationTextName.setText(building.get("nazwa").toString());
-					InstytutionInformationYear.setText(building.get("rok_powstania").toString().split(" ")[0]);
-					InstytutionInformationTextManager.setText(building.get("kierownik").toString());
-					InstytutionInformationTextDirector.setText(building.get("dyrektor").toString());
-					InstytutionInformationTextSecrurity.setText(building.get("firma_ochroniarska").toString());
-					
-					
-					String zarobki = building.get("miesieczny_obrot").toString();
-					String zysk = building.get("bilans_miesieczny").toString();
-//					int strata =  (Integer.parseInt(zarobki) - Integer.parseInt(zysk));
-//					String straty = "" + strata;
-					InstytutionInformationTextEarnings.setText(zarobki);
-//					InstytutionInformationTextLoses.setText(straty);
-					InstytutionInformationTextTurnover.setText(zysk);
-					InstytutionInformationTextStreet.setText(building.get("ulica").toString());
-					InstytutionInformationTextBuldingNumber.setText(building.get("nr_lokalu").toString());
-					InstytutionInformationTextCity.setText(building.get("miasto").toString());
-					InstytutionInformationTextLand.setText(building.get("wojewodztwo").toString());
-					InstytutionInformationTextCountry.setText(building.get("kraj").toString());
-					InstytutionInformationTextPostalCode.setText(building.get("kod_pocztowy").toString());
+					building_idx = 0;
+					buildings_records = existing_building.get();
+					set_building_informations(buildings_records.get(0));
 					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -1468,6 +1601,8 @@ public class MainWindow {
 					
 				}
 			}
+
+			
 			
 		});
 		InstitutionPanel.add(InstytutionMainButtonSearch);
@@ -1648,12 +1783,13 @@ public class MainWindow {
 		panel_9.add(InstytutionEquipmentButtonDelete);
 		
 		JPanel panel_10 = new JPanel();
+		panel_10.setBorder(new EmptyBorder(0, 0, 0, 0));
 		tabbedPane_2.addTab("Pracownicy", new ImageIcon(MainWindow.class.getResource("/images32x32/staff.png")), panel_10, null);
+		tabbedPane_2.setEnabledAt(2, true);
 		panel_10.setLayout(null);
 		
-		InstytutionEmployeesTable = new JTable();
-		InstytutionEmployeesTable.setBounds(10, 11, 859, 293);
-		panel_10.add(InstytutionEmployeesTable);
+		
+		
 		
 		JButton InstytutionEmployeesButtonDetails = new JButton("Szczeg\u00F3\u0142y...");
 		InstytutionEmployeesButtonDetails.setBounds(870, 11, 167, 23);
@@ -1670,7 +1806,35 @@ public class MainWindow {
 		JButton InstytutionEmployeesButtonDelete = new JButton("Usu\u0144");
 		InstytutionEmployeesButtonDelete.setBounds(870, 113, 167, 23);
 		panel_10.add(InstytutionEmployeesButtonDelete);
+										
+		JScrollPane InstytutionEmployeesScrollPane = new JScrollPane();
+		InstytutionEmployeesScrollPane.setViewportBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		InstytutionEmployeesScrollPane.setBounds(10, 11, 456, 283);
+		panel_10.add(InstytutionEmployeesScrollPane);
+										
+										
+//		JScrollPane InstytutionEmployeesScrollPane = new JScrollPane();
+//		InstytutionEmployeesScrollPane.setBounds(0, 298, 844, -298);
+//
+//		panel_10.add(InstytutionEmployeesScrollPane);
+//		
+		emp_table = new JTable();
+		emp_table.setBounds(0, 0, 824, 219);
+		emp_table.setModel(new DefaultTableModel(
+				new Object[][] {
+					{"", "", "", "", ""}
+				},
+				new String[] {
+					"Imie", "Nazwisko", "data_urodzenia", "Nr_tel", "Nr_dowodu"
+				}
+			));
+		InstytutionEmployeesScrollPane.setViewportView(emp_table);
+
 		
+		
+		
+		
+	
 		JLabel lblKraj = new JLabel("Kraj:");
 		lblKraj.setBounds(578, 205, 102, 20);
 		InstitutionPanel.add(lblKraj);
@@ -1683,11 +1847,43 @@ public class MainWindow {
 		JButton button_2 = new JButton("");
 		button_2.setIcon(new ImageIcon(MainWindow.class.getResource("/images32x32/leftarrow32.png")));
 		button_2.setBounds(773, 6, 144, 35);
+		button_2.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				try {
+					
+					if (building_idx > 0) building_idx -= 1;
+					set_building_informations(buildings_records.get(building_idx));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		});
 		InstitutionPanel.add(button_2);
 		
 		JButton button_3 = new JButton("");
 		button_3.setIcon(new ImageIcon(MainWindow.class.getResource("/images32x32/rightarrow32.png")));
 		button_3.setBounds(915, 6, 144, 35);
+		button_3.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				try {
+					
+					if (building_idx < buildings_records.size() - 1) building_idx += 1;
+					set_building_informations(buildings_records.get(building_idx));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		});
 		InstitutionPanel.add(button_3);
 		
 		JPanel RoutePanel = new JPanel();
@@ -1699,14 +1895,116 @@ public class MainWindow {
 		
 		JButton btnWyszukajTrase = new JButton("wyszukaj trase");
 		btnWyszukajTrase.setBounds(888, 94, 171, 23);
+		btnWyszukajTrase.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+
+				Future<ArrayList<Map<String, Object>>> result = find_route();
+				
+				try {
+					przejazd_idx = 0;
+					przejazd_start = result.get();
+					set_route_informations(przejazd_start.get(przejazd_idx));
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("Route not found.");
+				}
+				
+			}
+
+			
+			
+			
+		});
 		RoutePanel.add(btnWyszukajTrase);
 		
 		JButton btnDodajTrase = new JButton("dodaj trase");
 		btnDodajTrase.setBounds(888, 131, 171, 23);
+		btnDodajTrase.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				String zaladownosc = trasa_zaladownosc.getText();
+				String czas_trwania = czas_trwania_trasy.getText();
+				String czas_wyjazdu = data_wyjazdu.getText();
+				String wyjazd_kod_pocztowy = start_kod_pocztowy.getText();
+				String wyjazd_kraj = start_kraj.getText();
+				String wyjazd_wojewodztwo = start_wojewodztwo.getText();
+				String wyjazd_miasto = start_miasto.getText();
+				String wyjazd_nr_lokalu = start_nr_lokalu.getText();
+				String wyjazd_ulica = start_ulica.getText();
+				String powrot_kod_pocztowy = docelowe_kod_pocztowy.getText();
+				String powrot_kraj = docelowe_kraj.getText();
+				String powrot_wojewodztwo = docelowe_wojewodztwo.getText();
+				String powrot_miasto = docelowe_miasto.getText();
+				String powrot_nr_lokalu = docelowe_nr_lokalu.getText();
+				String powrot_ulica = docelowe_ulica.getText();
+				String odleglosc = odleglosc_trasy.getText();
+				String marka = marka_pojazdu.getText();
+				String model = model_pojazdu.getText();
+				String ladownosc = ladownosc_pojazdu.getText();
+				String get_pojazd_cmd = "Select pojazdy.id_pojazdu from pojazdy join dowody_rejestracyjne on pojazdy.id_pojazdu = dowody_rejestracyjne.id_pojazdu join karty_techniczne_pojazdow on pojazdy.id_pojazdu = karty_techniczne_pojazdow.id_pojazdu where marka like '%"+marka+"%' and model like '%"+model+"%'";
+				System.out.println(get_pojazd_cmd);
+				int id_pojazdu = 0;
+				try {
+					id_pojazdu = Integer.parseInt(executeCommandAndWaitForOutput(get_pojazd_cmd).get().get(0).get("id_pojazdu").toString());
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					System.out.println("No car found.");
+				}
+				String get_miejsce_id = "Select adres_id_seq.nextval from dual";
+				
+				int id_miejsca_startowego = 0;
+				int id_miejsca_docelowego = 0;
+				try {
+					Future<ArrayList<Map<String, Object>>> start = executeCommandAndWaitForOutput(get_miejsce_id);
+					Future<ArrayList<Map<String, Object>>> stop = executeCommandAndWaitForOutput(get_miejsce_id);
+					id_miejsca_startowego = Integer.parseInt(start.get().get(0).get("nextval").toString());
+					id_miejsca_docelowego = Integer.parseInt(stop.get().get(0).get("nextval").toString());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("Couldnt add route");
+				}
+				String start_adres_insert_cmd = get_insert_adres_cmd(wyjazd_ulica, wyjazd_nr_lokalu, wyjazd_kod_pocztowy, wyjazd_miasto, wyjazd_wojewodztwo, wyjazd_kraj, ""+id_miejsca_startowego);
+				String stop_adres_insert_cmd = get_insert_adres_cmd(powrot_ulica, powrot_nr_lokalu, powrot_kod_pocztowy, powrot_miasto, powrot_wojewodztwo, powrot_kraj, ""+id_miejsca_docelowego);
+				
+				String przejazd_insert_cmd = "insert into przejazdy ( id_przejazdu, data_przejazdu, id_miejsca_startowego, id_miejsca_docelowego, odleglosc, szacowany_czas, id_pojazdu ) ";
+				przejazd_insert_cmd += "values ( przejazd_id_seq.nextval, TO_DATE('"+czas_wyjazdu+"', 'yyyy-mm-dd'), "+id_miejsca_startowego + ", "+(id_miejsca_docelowego)+", ";
+				przejazd_insert_cmd += odleglosc + ", "+ czas_trwania+", "+id_pojazdu+")";
+				System.out.println(przejazd_insert_cmd);
+				insert_to_db(start_adres_insert_cmd, stop_adres_insert_cmd, "");
+				insert_to_db(przejazd_insert_cmd, "", "");
+			}
+			
+		});
 		RoutePanel.add(btnDodajTrase);
 		
 		JButton btnUsuTrase = new JButton("usu\u0144 trase");
 		btnUsuTrase.setBounds(888, 165, 171, 23);
+		btnUsuTrase.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				Future<ArrayList<Map<String, Object>>> result = find_route();
+				try {
+					Map<String, Object> route = result.get().get(0);
+					String route_id = route.get("id_przejazdu").toString();
+					String delete_route_cmd = "delete from przejazdy where id_przejazdu = "+route_id;
+					insert_to_db(delete_route_cmd, "", "");
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("Couldnt remove route.");
+				}
+				
+			}
+			
+		});
 		RoutePanel.add(btnUsuTrase);
 		
 		JRadioButton radioButton = new JRadioButton("tryb edycji");
@@ -1714,43 +2012,38 @@ public class MainWindow {
 		RoutePanel.add(radioButton);
 		
 		JLabel lblMiejsceDocelowe = new JLabel("Miejsce docelowe:");
-		lblMiejsceDocelowe.setBounds(10, 58, 148, 20);
+		lblMiejsceDocelowe.setBounds(492, 95, 148, 20);
 		RoutePanel.add(lblMiejsceDocelowe);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(610, 94, 190, 20);
-		RoutePanel.add(textField_1);
+		docelowe_ulica = new JTextField();
+		docelowe_ulica.setColumns(10);
+		docelowe_ulica.setBounds(610, 130, 190, 20);
+		RoutePanel.add(docelowe_ulica);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(610, 130, 190, 20);
-		RoutePanel.add(textField_2);
+		docelowe_nr_lokalu = new JTextField();
+		docelowe_nr_lokalu.setColumns(10);
+		docelowe_nr_lokalu.setBounds(610, 161, 190, 20);
+		RoutePanel.add(docelowe_nr_lokalu);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(610, 161, 190, 20);
-		RoutePanel.add(textField_3);
+		docelowe_miasto = new JTextField();
+		docelowe_miasto.setColumns(10);
+		docelowe_miasto.setBounds(610, 192, 190, 20);
+		RoutePanel.add(docelowe_miasto);
 		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(610, 192, 190, 20);
-		RoutePanel.add(textField_4);
+		docelowe_wojewodztwo = new JTextField();
+		docelowe_wojewodztwo.setColumns(10);
+		docelowe_wojewodztwo.setBounds(610, 223, 190, 20);
+		RoutePanel.add(docelowe_wojewodztwo);
 		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(610, 223, 190, 20);
-		RoutePanel.add(textField_5);
+		docelowe_kraj = new JTextField();
+		docelowe_kraj.setColumns(10);
+		docelowe_kraj.setBounds(610, 257, 190, 20);
+		RoutePanel.add(docelowe_kraj);
 		
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-		textField_6.setBounds(610, 257, 190, 20);
-		RoutePanel.add(textField_6);
-		
-		textField_7 = new JTextField();
-		textField_7.setColumns(10);
-		textField_7.setBounds(610, 288, 190, 20);
-		RoutePanel.add(textField_7);
+		docelowe_kod_pocztowy = new JTextField();
+		docelowe_kod_pocztowy.setColumns(10);
+		docelowe_kod_pocztowy.setBounds(610, 288, 190, 20);
+		RoutePanel.add(docelowe_kod_pocztowy);
 		
 		JLabel label_1 = new JLabel("Kod pocztowy:");
 		label_1.setBounds(494, 291, 110, 20);
@@ -1776,14 +2069,6 @@ public class MainWindow {
 		label_6.setBounds(494, 130, 110, 20);
 		RoutePanel.add(label_6);
 		
-		JLabel label_7 = new JLabel("Nazwa:");
-		label_7.setBounds(494, 94, 100, 20);
-		RoutePanel.add(label_7);
-		
-		JLabel label_8 = new JLabel("Nazwa:");
-		label_8.setBounds(10, 94, 100, 20);
-		RoutePanel.add(label_8);
-		
 		JLabel label_9 = new JLabel("Kod pocztowy:");
 		label_9.setBounds(10, 291, 110, 20);
 		RoutePanel.add(label_9);
@@ -1808,188 +2093,207 @@ public class MainWindow {
 		label_14.setBounds(10, 130, 110, 20);
 		RoutePanel.add(label_14);
 		
-		textField_8 = new JTextField();
-		textField_8.setColumns(10);
-		textField_8.setBounds(126, 94, 190, 20);
-		RoutePanel.add(textField_8);
 		
-		textField_9 = new JTextField();
-		textField_9.setColumns(10);
-		textField_9.setBounds(126, 130, 190, 20);
-		RoutePanel.add(textField_9);
+		start_ulica = new JTextField();
+		start_ulica.setColumns(10);
+		start_ulica.setBounds(126, 130, 190, 20);
+		RoutePanel.add(start_ulica);
 		
-		textField_10 = new JTextField();
-		textField_10.setColumns(10);
-		textField_10.setBounds(126, 161, 190, 20);
-		RoutePanel.add(textField_10);
+		start_nr_lokalu = new JTextField();
+		start_nr_lokalu.setColumns(10);
+		start_nr_lokalu.setBounds(126, 161, 190, 20);
+		RoutePanel.add(start_nr_lokalu);
 		
-		textField_11 = new JTextField();
-		textField_11.setColumns(10);
-		textField_11.setBounds(126, 192, 190, 20);
-		RoutePanel.add(textField_11);
+		start_miasto = new JTextField();
+		start_miasto.setColumns(10);
+		start_miasto.setBounds(126, 192, 190, 20);
+		RoutePanel.add(start_miasto);
 		
-		textField_12 = new JTextField();
-		textField_12.setColumns(10);
-		textField_12.setBounds(126, 223, 190, 20);
-		RoutePanel.add(textField_12);
+		start_wojewodztwo = new JTextField();
+		start_wojewodztwo.setColumns(10);
+		start_wojewodztwo.setBounds(126, 223, 190, 20);
+		RoutePanel.add(start_wojewodztwo);
 		
-		textField_13 = new JTextField();
-		textField_13.setColumns(10);
-		textField_13.setBounds(126, 257, 190, 20);
-		RoutePanel.add(textField_13);
+		start_kraj = new JTextField();
+		start_kraj.setColumns(10);
+		start_kraj.setBounds(126, 257, 190, 20);
+		RoutePanel.add(start_kraj);
 		
-		textField_14 = new JTextField();
-		textField_14.setColumns(10);
-		textField_14.setBounds(126, 288, 190, 20);
-		RoutePanel.add(textField_14);
+		start_kod_pocztowy = new JTextField();
+		start_kod_pocztowy.setColumns(10);
+		start_kod_pocztowy.setBounds(126, 288, 190, 20);
+		RoutePanel.add(start_kod_pocztowy);
 		
 		JLabel lblMiejsceRozpoczciaTrasy = new JLabel("Miejsce rozpocz\u0119cia trasy:");
-		lblMiejsceRozpoczciaTrasy.setBounds(494, 61, 226, 20);
-		RoutePanel.add(lblMiejsceRozpoczciaTrasy);
-		
-		textField_15 = new JTextField();
-		textField_15.setColumns(10);
-		textField_15.setBounds(126, 576, 190, 20);
-		RoutePanel.add(textField_15);
-		
-		JLabel label_15 = new JLabel("Kod pocztowy:");
-		label_15.setBounds(10, 579, 110, 20);
-		RoutePanel.add(label_15);
-		
-		JLabel label_17 = new JLabel("Kraj:");
-		label_17.setBounds(10, 545, 110, 20);
-		RoutePanel.add(label_17);
-		
-		textField_16 = new JTextField();
-		textField_16.setColumns(10);
-		textField_16.setBounds(126, 545, 190, 20);
-		RoutePanel.add(textField_16);
-		
-		textField_17 = new JTextField();
-		textField_17.setColumns(10);
-		textField_17.setBounds(126, 511, 190, 20);
-		RoutePanel.add(textField_17);
-		
-		JLabel label_26 = new JLabel("Wojew\u00F3dztwo:");
-		label_26.setBounds(10, 511, 110, 20);
-		RoutePanel.add(label_26);
-		
-		JLabel label_27 = new JLabel("Miasto:");
-		label_27.setBounds(10, 480, 110, 20);
-		RoutePanel.add(label_27);
-		
-		textField_18 = new JTextField();
-		textField_18.setColumns(10);
-		textField_18.setBounds(126, 480, 190, 20);
-		RoutePanel.add(textField_18);
-		
-		textField_19 = new JTextField();
-		textField_19.setColumns(10);
-		textField_19.setBounds(126, 449, 190, 20);
-		RoutePanel.add(textField_19);
-		
-		JLabel label_28 = new JLabel("Numer Lokalu:");
-		label_28.setBounds(10, 449, 110, 20);
-		RoutePanel.add(label_28);
-		
-		JLabel label_29 = new JLabel("Ulica:");
-		label_29.setBounds(10, 418, 110, 20);
-		RoutePanel.add(label_29);
-		
-		JLabel label_30 = new JLabel("Nazwa:");
-		label_30.setBounds(10, 382, 100, 20);
-		RoutePanel.add(label_30);
-		
-		textField_20 = new JTextField();
-		textField_20.setColumns(10);
-		textField_20.setBounds(126, 382, 190, 20);
-		RoutePanel.add(textField_20);
-		
-		JLabel lblMiejsceZaadunku = new JLabel("Miejsce za\u0142adunku:");
-		lblMiejsceZaadunku.setBounds(10, 349, 148, 20);
-		RoutePanel.add(lblMiejsceZaadunku);
-		
-		textField_21 = new JTextField();
-		textField_21.setColumns(10);
-		textField_21.setBounds(610, 576, 190, 20);
-		RoutePanel.add(textField_21);
-		
-		JLabel label_32 = new JLabel("Kod pocztowy:");
-		label_32.setBounds(494, 579, 110, 20);
-		RoutePanel.add(label_32);
-		
-		JLabel label_33 = new JLabel("Kraj:");
-		label_33.setBounds(494, 545, 110, 20);
-		RoutePanel.add(label_33);
-		
-		textField_22 = new JTextField();
-		textField_22.setColumns(10);
-		textField_22.setBounds(610, 545, 190, 20);
-		RoutePanel.add(textField_22);
-		
-		textField_23 = new JTextField();
-		textField_23.setColumns(10);
-		textField_23.setBounds(610, 511, 190, 20);
-		RoutePanel.add(textField_23);
-		
-		JLabel label_34 = new JLabel("Wojew\u00F3dztwo:");
-		label_34.setBounds(494, 511, 110, 20);
-		RoutePanel.add(label_34);
-		
-		JLabel label_35 = new JLabel("Miasto:");
-		label_35.setBounds(494, 480, 110, 20);
-		RoutePanel.add(label_35);
-		
-		textField_24 = new JTextField();
-		textField_24.setColumns(10);
-		textField_24.setBounds(610, 480, 190, 20);
-		RoutePanel.add(textField_24);
-		
-		textField_25 = new JTextField();
-		textField_25.setColumns(10);
-		textField_25.setBounds(610, 449, 190, 20);
-		RoutePanel.add(textField_25);
-		
-		JLabel label_37 = new JLabel("Numer Lokalu:");
-		label_37.setBounds(494, 449, 110, 20);
-		RoutePanel.add(label_37);
-		
-		JLabel label_38 = new JLabel("Ulica:");
-		label_38.setBounds(494, 418, 110, 20);
-		RoutePanel.add(label_38);
-		
-		JLabel label_39 = new JLabel("Nazwa:");
-		label_39.setBounds(494, 382, 100, 20);
-		RoutePanel.add(label_39);
-		
-		textField_26 = new JTextField();
-		textField_26.setColumns(10);
-		textField_26.setBounds(610, 382, 190, 20);
-		RoutePanel.add(textField_26);
-		
-		JLabel lblMiejsceRozadunku = new JLabel("Miejsce roz\u0142adunku:");
-		lblMiejsceRozadunku.setBounds(494, 349, 148, 20);
-		RoutePanel.add(lblMiejsceRozadunku);
-		
-		textField_27 = new JTextField();
-		textField_27.setColumns(10);
-		textField_27.setBounds(126, 418, 190, 20);
-		RoutePanel.add(textField_27);
-		
-		textField_28 = new JTextField();
-		textField_28.setColumns(10);
-		textField_28.setBounds(610, 413, 190, 20);
-		RoutePanel.add(textField_28);
-		
+		lblMiejsceRozpoczciaTrasy.setBounds(10, 95, 226, 20);
+		RoutePanel.add(lblMiejsceRozpoczciaTrasy);	
 		JButton button_6 = new JButton("");
+		button_6.addActionListener(new ActionListener() {
+
+		public void actionPerformed(ActionEvent arg0) {
+					// TODO Auto-generated method stub
+			try {
+				if (przejazd_idx > 0 ) 	przejazd_idx -= 1;
+				set_route_informations(przejazd_start.get(przejazd_idx));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		});
 		button_6.setIcon(new ImageIcon(MainWindow.class.getResource("/images32x32/leftarrow32.png")));
 		button_6.setBounds(10, 7, 144, 35);
 		RoutePanel.add(button_6);
 		
 		JButton button_7 = new JButton("");
+		button_7.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+				
+					if (przejazd_idx < przejazd_start.size() -1 ) przejazd_idx += 1;
+					set_route_informations(przejazd_start.get(przejazd_idx));
+				} catch (Exception e) {
+				// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 		button_7.setIcon(new ImageIcon(MainWindow.class.getResource("/images32x32/rightarrow32.png")));
 		button_7.setBounds(152, 7, 144, 35);
 		RoutePanel.add(button_7);
+		
+		JScrollPane routeScrollPane = new JScrollPane();
+		routeScrollPane.setViewportBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		routeScrollPane.setBounds(360, 337, 578, 407);
+		RoutePanel.add(routeScrollPane);
+		
+		dostawy_tab = new JTable();
+		dostawy_tab.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null}
+			},
+			new String[] {
+				"Czas dostarczenia", "Towary", "Adres dostawy", "Odbiorca", "Nr faktury"
+			}
+		));
+		dostawy_tab.getColumnModel().getColumn(0).setPreferredWidth(123);
+		dostawy_tab.getColumnModel().getColumn(1).setPreferredWidth(135);
+		dostawy_tab.getColumnModel().getColumn(2).setPreferredWidth(132);
+		dostawy_tab.getColumnModel().getColumn(3).setPreferredWidth(134);
+		routeScrollPane.setViewportView(dostawy_tab);
+		
+		JLabel lblDataWyjazdu = new JLabel("Data wyjazdu:");
+		lblDataWyjazdu.setBounds(10, 340, 100, 23);
+		RoutePanel.add(lblDataWyjazdu);
+		
+		data_wyjazdu = new JTextField();
+		data_wyjazdu.setColumns(10);
+		data_wyjazdu.setBounds(147, 340, 190, 20);
+		RoutePanel.add(data_wyjazdu);
+		
+		JLabel lblCzasTrwaniaTrasy = new JLabel("Czas trwania trasy:");
+		lblCzasTrwaniaTrasy.setBounds(10, 382, 127, 23);
+		RoutePanel.add(lblCzasTrwaniaTrasy);
+		
+		czas_trwania_trasy = new JTextField();
+		czas_trwania_trasy.setColumns(10);
+		czas_trwania_trasy.setBounds(147, 382, 190, 20);
+		RoutePanel.add(czas_trwania_trasy);
+		
+		trasa_zaladownosc = new JTextField();
+		trasa_zaladownosc.setColumns(10);
+		trasa_zaladownosc.setBounds(147, 423, 190, 20);
+		RoutePanel.add(trasa_zaladownosc);
+		
+		JLabel lblZaadowanowKg = new JLabel("Za\u0142adowano (w kg):");
+		lblZaadowanowKg.setBounds(10, 426, 127, 17);
+		RoutePanel.add(lblZaadowanowKg);
+		
+		JLabel lblOdlegloscWKm = new JLabel("Odleglosc w km:");
+		lblOdlegloscWKm.setBounds(10, 454, 110, 23);
+		RoutePanel.add(lblOdlegloscWKm);
+		
+		odleglosc_trasy = new JTextField();
+		odleglosc_trasy.setColumns(10);
+		odleglosc_trasy.setBounds(147, 457, 190, 20);
+		RoutePanel.add(odleglosc_trasy);
+		
+		marka_pojazdu = new JTextField();
+		marka_pojazdu.setColumns(10);
+		marka_pojazdu.setBounds(147, 502, 190, 20);
+		RoutePanel.add(marka_pojazdu);
+		model_pojazdu = new JTextField();
+		model_pojazdu.setColumns(10);
+		model_pojazdu.setBounds(147, 541, 190, 20);
+		RoutePanel.add(model_pojazdu);
+		
+		ladownosc_pojazdu = new JTextField();
+		ladownosc_pojazdu.setColumns(10);
+		ladownosc_pojazdu.setBounds(147, 581, 190, 20);
+		RoutePanel.add(ladownosc_pojazdu);
+		
+		JLabel lblMarkaPojazdu = new JLabel("Marka pojazdu:");
+		lblMarkaPojazdu.setBounds(10, 505, 110, 17);
+		RoutePanel.add(lblMarkaPojazdu);
+		
+		JLabel lblModelPojazdu = new JLabel("Model pojazdu: ");
+		lblModelPojazdu.setBounds(10, 544, 110, 17);
+		RoutePanel.add(lblModelPojazdu);
+		
+		JLabel lbladownoPojazdu = new JLabel("\u0141adowno\u015B\u0107 pojazdu: ");
+		lbladownoPojazdu.setBounds(10, 584, 110, 17);
+		RoutePanel.add(lbladownoPojazdu);
+		
+		JButton btnDodajDostawe = new JButton("Dodaj dostawe");
+		btnDodajDostawe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				DefaultTableModel model = (DefaultTableModel) dostawy_tab.getModel();
+				String czas_dostarczenia = model.getValueAt(model.getRowCount() - 1, 0).toString();
+				String Towary = model.getValueAt(model.getRowCount() - 1, 1).toString();
+				String Adres_dostawy = model.getValueAt(model.getRowCount() - 1, 2).toString();
+				String Odbiorca = model.getValueAt(model.getRowCount() - 1, 3).toString();
+				String nr_faktury = model.getValueAt(model.getRowCount() - 1, 4).toString();
+				String odbiorca_imie = Odbiorca.split(" ")[0];
+				String odbiorca_nazwisko = Odbiorca.split(" ")[1];
+				String kod_pocztowy_dostawy = start_kod_pocztowy.getText();
+				String kraj_dostawy = start_kraj.getText();
+				String wojewodztwo_dostawy = start_wojewodztwo.getText();
+				
+				String ulica = Adres_dostawy.split(" ")[0];
+				String nr_lokalu = Adres_dostawy.split(" ")[1];
+				String adr_id = "";
+				try {
+					adr_id = get_adr_id().get().get(0).get("nextval").toString();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String insert_adr = get_insert_adres_cmd(ulica, nr_lokalu, kod_pocztowy_dostawy, start_miasto.getText(), wojewodztwo_dostawy, kraj_dostawy, adr_id);
+ 
+				String dostawa_insert_cmd = "insert into dostawy (towary, rzeczywisty_czas_dostarczenia, id_dostawy, id_trasy, id_miejsca_docelowego, nr_faktury, imie_odbiorcy, nazwisko_odbiorcy) ";
+				dostawa_insert_cmd += "values ("+Towary+", "+czas_dostarczenia+", dostawa_id_seq.nextval, "+id_trasy+", "+adr_id+", "+nr_faktury+", "+odbiorca_imie+", "+odbiorca_nazwisko+")";
+				
+				insert_to_db(insert_adr, "", "");
+				insert_to_db(dostawa_insert_cmd, "", "");
+
+//				"Czas dostarczenia", "Towary", "Adres dostawy", "Odbiorca"
+				
+				model.addRow(new Object[] {null, null, null ,null, null});
+			}
+		});
+		btnDodajDostawe.setBounds(948, 340, 111, 23);
+		RoutePanel.add(btnDodajDostawe);
+		
+		JButton button_4 = new JButton("Usun dostawe");
+		button_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		button_4.setBounds(948, 374, 111, 23);
+		RoutePanel.add(button_4);
 		
 		JPanel ContractorsPanel = new JPanel();
 		tabGuardian.addPanelToMap("Kontrahenci", ContractorsPanel);
@@ -2086,10 +2390,6 @@ public class MainWindow {
 		btnPodgld.setBounds(948, 116, 89, 23);
 		panel_12.add(btnPodgld);
 		
-		table_2 = new JTable();
-		table_2.setBounds(10, 11, 911, 250);
-		panel_12.add(table_2);
-		
 		JButton btnUsu_1 = new JButton("Usu\u0144");
 		btnUsu_1.setBounds(948, 45, 89, 23);
 		panel_12.add(btnUsu_1);
@@ -2097,6 +2397,24 @@ public class MainWindow {
 		JButton btnEdytuj = new JButton("Edytuj");
 		btnEdytuj.setBounds(948, 82, 89, 23);
 		panel_12.add(btnEdytuj);
+		
+		JScrollPane Faktury_scrollPane = new JScrollPane();
+		Faktury_scrollPane.setBounds(10, 11, 523, 246);
+		panel_12.add(Faktury_scrollPane);
+		
+		faktury_table = new JTable();
+		faktury_table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Towar", "kwota", "Nr faktury", "Data wystawienia"
+			}
+		));
+		faktury_table.getColumnModel().getColumn(0).setPreferredWidth(93);
+		faktury_table.getColumnModel().getColumn(1).setPreferredWidth(90);
+		faktury_table.getColumnModel().getColumn(2).setPreferredWidth(89);
+		faktury_table.getColumnModel().getColumn(3).setPreferredWidth(143);
+		Faktury_scrollPane.setViewportView(faktury_table);
 		
 		JButton button_12 = new JButton("");
 		button_12.setIcon(new ImageIcon(MainWindow.class.getResource("/images32x32/leftarrow32.png")));
@@ -2272,7 +2590,99 @@ public class MainWindow {
 		}
 		
 	}
-	
+	private void set_building_informations(Map<String, Object> building) {
+		InstytutionInformationTextName.setText(building.get("nazwa").toString());
+		InstytutionInformationYear.setText(building.get("rok_powstania").toString().split(" ")[0]);
+		InstytutionInformationTextManager.setText(building.get("kierownik").toString());
+		InstytutionInformationTextDirector.setText(building.get("dyrektor").toString());
+		InstytutionInformationTextSecrurity.setText(building.get("firma_ochroniarska").toString());
+		
+		
+		String zarobki = building.get("miesieczny_obrot").toString();
+		String zysk = building.get("bilans_miesieczny").toString();
+//			int strata =  (Integer.parseInt(zarobki) - Integer.parseInt(zysk));
+//			String straty = "" + strata;
+		InstytutionInformationTextEarnings.setText(zarobki);
+//			InstytutionInformationTextLoses.setText(straty);
+		InstytutionInformationTextTurnover.setText(zysk);
+		InstytutionInformationTextStreet.setText(building.get("ulica").toString());
+		InstytutionInformationTextBuldingNumber.setText(building.get("nr_lokalu").toString());
+		InstytutionInformationTextCity.setText(building.get("miasto").toString());
+		InstytutionInformationTextLand.setText(building.get("wojewodztwo").toString());
+		InstytutionInformationTextCountry.setText(building.get("kraj").toString());
+		InstytutionInformationTextPostalCode.setText(building.get("kod_pocztowy").toString());
+		String building_id = building.get("id_budynku").toString();
+		String cmd = "Select imie, nazwisko, data_urodzenia, nr_tel, nr_dowodu from pracownicy join dane_osobowe on pracownicy.id_danych_osobowych"
+				+ " = dane_osobowe.id_danych_osobowych where id_budynku = "+building_id;
+		Object[][] records = null;
+		try {
+			ArrayList<Map<String, Object>> workers = executeCommandAndWaitForOutput(cmd).get();
+			records = new Object[workers.size()][5];
+			int i = 0;
+			for(Map<String, Object> worker : workers)
+			{
+				records[i][0] = worker.get("imie").toString();
+				records[i][1] = worker.get("nazwisko").toString();
+				records[i][2] = worker.get("data_urodzenia").toString().split(" ")[0];
+				records[i][3] = worker.get("nr_tel").toString();
+				records[i][4] = worker.get("nr_dowodu").toString();
+				i++;
+			}
+		}
+	    catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		emp_table.setModel(new DefaultTableModel(records,
+				new String[] {
+					"Imie", "Nazwisko", "data_urodzenia", "Nr_tel", "Nr_dowodu"
+				}
+			));
+	}
+	private void set_employee_informations(Map<String, Object> output)
+			throws ParseException, InterruptedException, ExecutionException {
+		Future<ArrayList<Map<String, Object>>> result2 = get_building_data(output);
+		setPersonalDataTextFields(output);
+		set_building_adress(result2);
+	}
+	private Future<ArrayList<Map<String, Object>>> find_route() {
+		String czas_trwania = czas_trwania_trasy.getText();
+		String czas_wyjazdu = data_wyjazdu.getText();
+		String wyjazd_kraj = start_kraj.getText();
+		String wyjazd_miasto = start_miasto.getText();
+		String wyjazd_ulica = start_ulica.getText();
+		
+		
+		String cmd = "select * from przejazdy join adresy on przejazdy.id_miejsca_startowego = adresy.id_adresu where ";
+		if(! czas_trwania.equals(""))
+		{
+			cmd += " szacowany_czas = "+czas_trwania; 
+		}
+		if(! wyjazd_ulica.equals(""))
+		{
+			if ( ! cmd.equals("")) cmd += " and";
+			cmd += " adresy.ulica like '%"+wyjazd_ulica+"%'";
+		}
+		if(! wyjazd_miasto.equals("")) 
+		{
+			if ( ! cmd.equals("")) cmd += " and";
+			cmd += " adresy.miasto like '%"+wyjazd_miasto+"%'";
+		}
+		if(! czas_wyjazdu.equals(""))
+		{
+			if ( ! cmd.equals("")) cmd += " and";
+			cmd += " data_przejazdu = TO_DATE('"+czas_wyjazdu+"', 'yyyy-mm-dd')";
+		}
+		if(! wyjazd_kraj.equals(""))
+		{
+			if ( ! cmd.equals("")) cmd += " and";
+			cmd += " adresy.kraj like '%"+wyjazd_kraj+"%'";
+		}
+		Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(cmd);
+		return result;
+	}
+
 	private void brak_wynikow() {
 		// TODO Auto-generated method stub
 		System.out.println("brak wynikow");
@@ -2293,12 +2703,75 @@ public class MainWindow {
 		EmployessPersonalDataTextWorkplaceAddress.setText(output2.get("ulica").toString() + " " +
 														  output2.get("nr_lokalu").toString());
 	}
-
+	
+	private void set_route_informations(Map<String, Object> current_route)
+			throws InterruptedException, ExecutionException {
+		czas_trwania_trasy.setText(current_route.get("szacowany_czas").toString());
+		data_wyjazdu.setText(current_route.get("data_przejazdu").toString().split(" ")[0]);
+		start_kod_pocztowy.setText(current_route.get("kod_pocztowy").toString());
+		start_kraj.setText(current_route.get("kraj").toString());
+		start_wojewodztwo.setText(current_route.get("wojewodztwo").toString());
+		start_miasto.setText(current_route.get("miasto").toString());
+		start_nr_lokalu.setText(current_route.get("nr_lokalu").toString());
+		start_ulica.setText(current_route.get("ulica").toString());
+		odleglosc_trasy.setText(current_route.get("odleglosc").toString());
+		String target_adr_id = "" + (Integer.parseInt(current_route.get("id_adresu").toString()) + 1);
+		String get_adr_cmd = "Select * from adresy where id_adresu = "+target_adr_id;
+		Future<ArrayList<Map<String, Object>>> adr_docelowy = executeCommandAndWaitForOutput(get_adr_cmd);
+		id_trasy = current_route.get("id_przejazdu").toString();
+		Map<String, Object> target_adr = adr_docelowy.get().get(0);
+		
+		
+		docelowe_kod_pocztowy.setText(target_adr.get("kod_pocztowy").toString());
+		docelowe_kraj.setText(target_adr.get("kraj").toString());
+		docelowe_wojewodztwo.setText(target_adr.get("wojewodztwo").toString());
+		docelowe_miasto.setText(target_adr.get("miasto").toString());
+		docelowe_nr_lokalu.setText(target_adr.get("nr_lokalu").toString());
+		docelowe_ulica.setText(target_adr.get("ulica").toString());
+		String car_id = current_route.get("id_pojazdu").toString();
+		
+		String get_car_cmd = "Select marka, model, max_ladownosc from pojazdy join karty_techniczne_pojazdow on pojazdy.id_pojazdu = karty_techniczne_pojazdow.id_pojazdu join ";
+		get_car_cmd += "dowody_rejestracyjne on pojazdy.id_pojazdu = dowody_rejestracyjne.id_pojazdu where pojazdy.id_pojazdu = "+car_id;
+		Map<String, Object> pojazd = executeCommandAndWaitForOutput(get_car_cmd).get().get(0);
+		marka_pojazdu.setText(pojazd.get("marka").toString());
+		model_pojazdu.setText(pojazd.get("model").toString());
+		ladownosc_pojazdu.setText(pojazd.get("max_ladownosc").toString());
+		String get_dostawy_cmd = "Select * from dostawy where id_trasy = "+id_trasy;
+		ArrayList<Map<String, Object>> dostawy = executeCommandAndWaitForOutput(get_dostawy_cmd).get();
+		DefaultTableModel model = (DefaultTableModel) dostawy_tab.getModel();
+		for (Map<String, Object> dostawa : dostawy)
+		{
+			String get_adr_dostawy_cmd = "Select ulica, nr_lokalu from adresy where id_adresu = "+dostawa.get("id_miejsca_docelowego").toString();
+			
+			Map<String, Object> adr_dostawy = executeCommandAndWaitForOutput(get_adr_dostawy_cmd).get().get(0);
+			model.addRow(new Object[] {dostawa.get("rzeczywisty_czas_dostarczenia").toString(), dostawa.get("towary").toString(),
+					""+adr_dostawy.get("ulica").toString()+" "+adr_dostawy.get("nr_lokalu").toString(), ""+dostawa.get("imie_odbiorcy").toString()+" "+dostawa.get("nazwisko_odbiorcy").toString() });
+//			"Czas dostarczenia", "Towary", "Adres dostawy", "Odbiorca"
+		}
+	}
+	private void set_car_informations(Map<String, Object> car) {
+		VehiclesMainTextFuel.setText(car.get("spalanie").toString());
+		VehiclesInformationTextTopSpeed.setText(car.get("max_predkosc").toString());
+		VehiclesInformationTextSelfMass.setText(car.get("masa_wlasna").toString());
+		VehiclesInformationTextChassisNumber.setText(car.get("nr_nadwozia").toString());
+		VehiclesInformationTextMaxCapacity.setText(car.get("max_ladownosc").toString());
+		VehiclesInformationTextRegistrationNumber.setText(car.get("nr_rejestracyjny").toString());
+		VehiclesInformationTextFirstRegistration.setText(car.get("pierwsza_rejestracja").toString().split(" ")[0]);
+		VehiclesInformationTextCountry.setText(car.get("kraj_produkcji").toString());
+		VehiclesInformationTextYear.setText(car.get("rok_produkcji").toString());
+		VehiclesInformationTextModel.setText(car.get("model").toString());
+		VehiclesInformationTextBrand.setText(car.get("marka").toString());
+		VehiclesInformationTextEngineNumber.setText(car.get("nr_silnika").toString());
+		VehiclesInformationTextEngineCapacity.setText(car.get("pojemnosc_silnika").toString());
+		VehiclesInformationTextOil.setText(car.get("zalecany_olej").toString());
+		VehiclesInformationTextMilage.setText(car.get("przebieg").toString());
+		VehiclesMainTextOverview.setText(car.get("nastepny_przeglad").toString().split(" ")[0]);
+	}
 	private Future<ArrayList<Map<String, Object>>> get_building_data(Map<String, Object> output) {
 		String get_budynek_cmd = "SELECT * from pracownicy join budynki on "+
-								 "pracownicy.id_budynku = budynki.budynkiid join" +
-								 " adres on budynki.id_adresu = adres.adresid where "+
-								 "pracownicy.pracownicyid = " + output.get("pracownicyid");
+								 "pracownicy.id_budynku = budynki.id_budynku join" +
+								 " adresy on budynki.id_adresu = adresy.id_adresu where "+
+								 "pracownicy.id_pracownika = " + output.get("id_pracownika");
 		Future<ArrayList<Map<String, Object>>> result2 = executeCommandAndWaitForOutput(get_budynek_cmd);
 		return result2;
 	}
@@ -2306,9 +2779,10 @@ public class MainWindow {
 	private Future<ArrayList<Map<String, Object>>> get_personal_data() {
 		String sql_condition = getSqlSearchCondition();
 		String cmd = "select * from dane_osobowe join pracownicy " +
-				     "on dane_osobowe.daneid = pracownicy.id_danych_osobowych join adres" +
-				   	 " on pracownicy.ID_ADRESU = adres.adresid where " +
+				     "on dane_osobowe.id_danych_osobowych = pracownicy.id_danych_osobowych join adresy" +
+				   	 " on pracownicy.ID_ADRESU = adresy.ID_ADRESU where " +
 				   	 sql_condition;
+
 		Future<ArrayList<Map<String, Object>>> result = executeCommandAndWaitForOutput(cmd);
 		return result;
 	}
@@ -2359,6 +2833,8 @@ public class MainWindow {
 			if(!insert_worker.equals("")) executor.submit(new Execute_command(insert_worker));
 			if(!insert_adres.equals("")) executor.submit(new Execute_command(insert_adres));
 			if(!insert_data.equals("")) executor.submit(new Execute_command(insert_data));
+			executor.shutdown();
+			executor.awaitTermination(100, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("Couldnt add worker, address or data.");
@@ -2367,7 +2843,7 @@ public class MainWindow {
 	private String get_insert_data_cmd(String imie, String nazwisko, String drugie_imie, String data_ur,
 			String nr_tel, String pesel, String nr_dowodu, String data_id) {
 		String insert_data_cmd = "";
-		insert_data_cmd += "insert into dane_osobowe (imie ,nazwisko ,nr_tel, nr_dowodu, data_urodzenia ,pesel ,drugie_imie, daneid) ";
+		insert_data_cmd += "insert into dane_osobowe (imie ,nazwisko ,nr_tel, nr_dowodu, data_urodzenia ,pesel ,drugie_imie, id_danych_osobowych) ";
 		insert_data_cmd += "values ('"+imie+"', '"+nazwisko+"', "+nr_tel+", '"+nr_dowodu+"', TO_DATE('"+data_ur+"', 'yyyy-mm-dd'), '"+pesel+"', '"+drugie_imie+"', "+data_id+")";
 		return insert_data_cmd;
 	}
@@ -2375,7 +2851,7 @@ public class MainWindow {
 	private String get_insert_adres_cmd(String ulica, String nr_lokalu, String kod_pocztowy, String miasto,
 			String wojewodztwo, String kraj, String adr_id) {
 		String insert_adres_cmd = "";
-		insert_adres_cmd += "insert into adres (ulica ,miasto , nr_lokalu, kod_pocztowy, wojewodztwo, kraj, adresid) ";
+		insert_adres_cmd += "insert into adresy (ulica ,miasto , nr_lokalu, kod_pocztowy, wojewodztwo, kraj, id_adresu) ";
 		insert_adres_cmd += "values ('"+ulica+"', '"+miasto+"', "+nr_lokalu+", '"+kod_pocztowy+"', '"+wojewodztwo+"', '"+kraj+"', "+adr_id+")";
 		return insert_adres_cmd;
 	}
@@ -2383,7 +2859,7 @@ public class MainWindow {
 	private String get_insert_worker_cmd(String typ_umowy, String adr_id, String building_id, String car_id,
 			String worker_id, String data_id) {
 		String insert_worker_cmd = "";
-		insert_worker_cmd += "insert into pracownicy (id_budynku, id_pojazdu, id_adresu, pracownicyid, id_danych_osobowych, typ_umowy_o_prace, stanowisko) ";
+		insert_worker_cmd += "insert into pracownicy (id_budynku, id_pojazdu, id_adresu, id_pracownika, id_danych_osobowych, typ_umowy_o_prace, stanowisko) ";
 		insert_worker_cmd += "values (" + building_id + ", " + car_id + ", " + adr_id + ", " + worker_id + ", " + data_id + ", '" + typ_umowy + "', 'Pracownik')";
 		return insert_worker_cmd;
 	}
@@ -2403,12 +2879,12 @@ public class MainWindow {
 		if(! name.equals(""))
 		{
 			if ( ! sql_condition.equals("")) sql_condition += " and";
-			sql_condition += " dane_osobowe.imie = '"+name+"'";
+			sql_condition += " dane_osobowe.imie like '%"+name+"%'";
 		}
 		if(! surname.equals("")) 
 		{
 			if ( ! sql_condition.equals("")) sql_condition += " and";
-			sql_condition += " dane_osobowe.nazwisko = '"+surname+"'";
+			sql_condition += " dane_osobowe.nazwisko like '%"+surname+"%'";
 		}
 //			if(! holiday.equals(""))
 //			{
@@ -2418,7 +2894,7 @@ public class MainWindow {
 		if(! number.equals(""))
 		{
 			if ( ! sql_condition.equals("")) sql_condition += " and";
-			sql_condition += " dane_osobowe.nr_tel = "+number;
+			sql_condition += " dane_osobowe.nr_tel like '%"+number+"%'";
 		}
 		return sql_condition;
 	}
@@ -2442,9 +2918,8 @@ public class MainWindow {
 		EmployessPersonalDataTextLand.setText(output.get("wojewodztwo").toString());
 		EmployessPersonalDataTextCountry.setText(output.get("kraj").toString());
 		String umowa = output.get("typ_umowy_o_prace").toString();
-		System.out.println(umowa);
-		if (umowa.equals("Zlecenie")) EmployessPersonalDataChoiceConctractOfEmployment.select(0);
-		else EmployessPersonalDataChoiceConctractOfEmployment.select(1);
+//		if (umowa.equals("Zlecenie")) EmployessPersonalDataChoiceConctractOfEmployment.select(0);
+//		else EmployessPersonalDataChoiceConctractOfEmployment.select(1);
 		
 		
 	}
