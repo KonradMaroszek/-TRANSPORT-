@@ -2592,7 +2592,7 @@ public class MainWindow {
 					e.printStackTrace();
 				}
 				
-				if (orginalPass != new String(passwordField_1.getPassword()))
+				if (!orginalPass.equals(new String(passwordField_1.getPassword())) )
 				{
 					JOptionPane.showMessageDialog(null,"Has³o niepoprwne!","B³¹d!",JOptionPane.WARNING_MESSAGE);
 					return;
@@ -2601,7 +2601,7 @@ public class MainWindow {
 				String newPassOne = new String(passwordField_2.getPassword());
 				String newPassTwo = new String(passwordField_3.getPassword());
 				
-				if (newPassOne != newPassTwo || newPassOne == "")
+				if (!newPassOne.equals(newPassTwo ) || newPassOne.equals(""))
 				{
 					JOptionPane.showMessageDialog(null,"Has³a musz¹ byc takie same oraz zawieraæ znaki!!", "B³¹d!",JOptionPane.WARNING_MESSAGE);
 					return;
