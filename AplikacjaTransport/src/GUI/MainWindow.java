@@ -279,43 +279,42 @@ public class MainWindow {
 		btnNewButton_1.setBounds(496, 276, 120, 23);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-					
-				// TUTAJ SPRAWDZASZ KTO SIÊ LOGUJE!  
+					 
 			     login = loginField.getText();
-//				String password = new String(passwordField.getPassword());
-//				String privilege = "-";
-//				String cmd = "Select uprawnienia from pracownicy where login = '"+login+"' and haslo = '"+password+"'";
-//				System.out.println(cmd);
-//				try {
-//					Future<ArrayList<Map<String, Object>>> record = executeCommandAndWaitForOutput(cmd);
-//					privilege = record.get().get(0).get("uprawnienia").toString();
-//				} catch (Exception e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				switch(privilege.toUpperCase())
-//				{
-//				case "ADMIN" : 
-//					UserLogged.setUserType(UserLogged.UserType.ADMIN);
-//					UserLogged.setUserLogged(true);
-//					break;
-//				case "EMPLOYEE" : 
-//					UserLogged.setUserType(UserLogged.UserType.EMPLOYEE);
-//				    UserLogged.setUserLogged(true);
-//					break;
-//				case "FORWARDER" :
-//					UserLogged.setUserType(UserLogged.UserType.FORWARDER);
-//					UserLogged.setUserLogged(true);
-//					break;
-//				default:
-//					UserLogged.setUserLogged(false);
-//					return;
-//				}
+			String password = new String(passwordField.getPassword());
+			String privilege = "-";
+				String cmd = "Select uprawnienia from pracownicy where login = '"+login+"' and haslo = '"+password+"'";
+				System.out.println(cmd);
+			     try {
+					Future<ArrayList<Map<String, Object>>> record = executeCommandAndWaitForOutput(cmd);
+					privilege = record.get().get(0).get("uprawnienia").toString();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+				e.printStackTrace();
+				}
+			switch(privilege.toUpperCase())
+			{
+			case "ADMIN" : 
+				UserLogged.setUserType(UserLogged.UserType.ADMIN);
+				UserLogged.setUserLogged(true);
+				break;
+				case "EMPLOYEE" : 
+					UserLogged.setUserType(UserLogged.UserType.EMPLOYEE);
+				    UserLogged.setUserLogged(true);
+					break;
+				case "FORWARDER" :
+					UserLogged.setUserType(UserLogged.UserType.FORWARDER);
+					UserLogged.setUserLogged(true);
+ 				break;
+				default:
+					UserLogged.setUserLogged(false);
+					return;
+				}
 				
 				HashMap<String, JPanel> panels = tabGuardian.getPanelMap();
 				HashMap<String, ImageIcon> icons = tabGuardian.getIconsMap();
 				
-				UserLogged.setUserType(UserLogged.UserType.ADMIN); // TODO wyrzucic ta linijke i odkomentowac poczatek
+			
 				
 				if (UserLogged.getLoggedButton().getText() == "wyloguj")
 				{
