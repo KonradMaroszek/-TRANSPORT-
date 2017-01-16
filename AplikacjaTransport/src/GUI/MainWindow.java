@@ -2708,6 +2708,12 @@ public class MainWindow {
 					return;
 				}
 				
+				if (!new String(passwordField_1.getPassword()).equals(new String(" ")) )
+				{
+					JOptionPane.showMessageDialog(null,"Nie poda³eœ has³a!","B³¹d!",JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
 				String newPassOne = new String(passwordField_2.getPassword());
 				String newPassTwo = new String(passwordField_3.getPassword());
 				
@@ -2764,7 +2770,7 @@ public class MainWindow {
 				String lg = textField_29.getText();
 				String type = textField.getText();
 				
-				if (type != "EMPLOYEE" && type != "ADMIN" && type != "FORWARDER")
+				if (!type.equals(new String("EMPLOYEE"))  && !type.equals(new String("ADMIN"))  && !type.equals(new String("FORWARDER")) )
 				{
 					JOptionPane.showMessageDialog(null,"Nie ma takiej opcji.","B³¹d!",JOptionPane.WARNING_MESSAGE);
 					return;
