@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import javax.swing.table.*;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
@@ -244,30 +245,37 @@ public class MainWindow {
 		tabGuardian.addIconToMap("Menu", new ImageIcon(MainWindow.class.getResource("/resources/menu.png")));
 		panelsNames.add("Menu");
 		
-		TabPanel.addTab("Menu g\u0142\u00F3wne", new ImageIcon(MainWindow.class.getResource("/resources/menu.png")), MainMenuPanle, null);
+		TabPanel.addTab("Menu", new ImageIcon(MainWindow.class.getResource("/resources/menu.png")), MainMenuPanle, null);
 		MainMenuPanle.setLayout(null);
 		
 		JLabel lblLogin = new JLabel("Login:");
+		UserLogged.setLoginText(lblLogin);
 		lblLogin.setBounds(327, 221, 82, 14);
 		MainMenuPanle.add(lblLogin);
 		
 		loginField = new JTextField();
+		UserLogged.setLoginField(loginField);
 		loginField.setBounds(432, 218, 347, 20);
 		MainMenuPanle.add(loginField);
 		loginField.setColumns(10);
 		
 		JLabel lblHaso = new JLabel("Has\u0142o:");
+		UserLogged.setPassText(lblHaso);
 		lblHaso.setBounds(327, 252, 82, 14);
 		MainMenuPanle.add(lblHaso);
 		
 		passwordField = new JPasswordField();
+		UserLogged.setPassField(passwordField);
 		passwordField.setBounds(432, 249, 347, 20);
 		MainMenuPanle.add(passwordField);
 		
-		JButton btnNewButton_1 = new JButton("Zaloguj");
+		JButton btnNewButton_1 = new JButton("zaloguj");
+		btnNewButton_1.setText("zaloguj");
+		UserLogged.setLoggedButton(btnNewButton_1);
 		btnNewButton_1.setBounds(496, 276, 120, 23);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+					
 				// TUTAJ SPRAWDZASZ KTO SIÊ LOGUJE!  
 //				String login = loginField.getText();
 //				String password = new String(passwordField.getPassword());
@@ -285,19 +293,38 @@ public class MainWindow {
 //				{
 //				case "ADMIN" : 
 //					UserLogged.setUserType(UserLogged.UserType.ADMIN);
+//					UserLogged.setUserLogged(true);
 //					break;
 //				case "EMPLOYEE" : 
 //					UserLogged.setUserType(UserLogged.UserType.EMPLOYEE);
+//				    UserLogged.setUserLogged(true);
 //					break;
 //				case "FORWARDER" :
 //					UserLogged.setUserType(UserLogged.UserType.FORWARDER);
+//					UserLogged.setUserLogged(true);
 //					break;
 //				default:
+//					UserLogged.setUserLogged(false);
 //					return;
 //				}
-				UserLogged.setUserType(UserLogged.UserType.ADMIN); // TODO wyrzucic ta linijke i odkomentowac poczatek
+				
 				HashMap<String, JPanel> panels = tabGuardian.getPanelMap();
 				HashMap<String, ImageIcon> icons = tabGuardian.getIconsMap();
+				
+				UserLogged.setUserType(UserLogged.UserType.ADMIN); // TODO wyrzucic ta linijke i odkomentowac poczatek
+				
+				if (UserLogged.getLoggedButton().getText() == "wyloguj")
+				{
+					JOptionPane.showMessageDialog(null,"Do Widzenia!","Do widzenia!",JOptionPane.WARNING_MESSAGE);
+					System.exit(0);
+				}
+				
+				if (UserLogged.getLoggedButton().getText() == "zaloguj")
+				{
+					UserLogged.Hide();
+					UserLogged.getLoggedButton().setText("wyloguj");	
+				}
+					
 				
 				if (UserLogged.getUserType() == UserLogged.UserType.ADMIN){
 					panels.remove("Menu");
@@ -332,15 +359,19 @@ public class MainWindow {
 						tabPanel.addTab(name, icons.get(name), panels.get(name), null);
 					}
 				}
+				
+				
 			}
 		});
 		MainMenuPanle.add(btnNewButton_1);
 		
 		JLabel lblWitajWApliakcji = new JLabel("Witaj w apliakcji \"Transport\". Zaloguj si\u0119 aby kontynuowa\u0107.");
+		UserLogged.setInfoText(lblWitajWApliakcji);
 		lblWitajWApliakcji.setBounds(391, 159, 696, 14);
 		MainMenuPanle.add(lblWitajWApliakcji);
 		
 		JLabel lblJeliNiePosiadasz = new JLabel("Je\u015Bli nie posiadasz konta zg\u0142o\u015B si\u0119 do swoejgo administratora.");
+		UserLogged.setInfo2Text(lblJeliNiePosiadasz);
 		lblJeliNiePosiadasz.setBounds(389, 184, 386, 14);
 		MainMenuPanle.add(lblJeliNiePosiadasz);
 		
