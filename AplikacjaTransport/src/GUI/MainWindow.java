@@ -70,6 +70,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.BevelBorder;
 
 public class MainWindow {
+	String login;
 	private int emp_idx;
 	String id_trasy;
 	ArrayList<Map<String, Object>> cars_records;
@@ -278,7 +279,7 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent arg0) {
 					
 				// TUTAJ SPRAWDZASZ KTO SIÃŠ LOGUJE!  
-//				String login = loginField.getText();
+			     login = loginField.getText();
 //				String password = new String(passwordField.getPassword());
 //				String privilege = "-";
 //				String cmd = "Select uprawnienia from pracownicy where login = '"+login+"' and haslo = '"+password+"'";
@@ -2548,6 +2549,43 @@ public class MainWindow {
 		SettingsPanel.setLayout(null);
 		
 		JButton btnZmieHaso = new JButton("Zmie\u0144 has\u0142o");
+		btnZmieHaso.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String cmd = "Select haslo from pracownicy where login = '"+login+"'";
+				String orginalPass = "";
+				try {
+					Future<ArrayList<Map<String, Object>>> record = executeCommandAndWaitForOutput(cmd);
+				    orginalPass = record.get().get(0).get("haslo").toString();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				if (orginalPass != new String(passwordField_1.getPassword()))
+				{
+					JOptionPane.showMessageDialog(null,"Has³o niepoprwne!","B³¹d!",JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
+				String newPassOne = new String(passwordField_2.getPassword());
+				String newPassTwo = new String(passwordField_3.getPassword());
+				
+				if (newPassOne != newPassTwo || newPassOne == "")
+				{
+					JOptionPane.showMessageDialog(null,"Has³a musz¹ byc takie same oraz zawieraæ znaki!!", "B³¹d!",JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+						
+			    cmd = "update pracownicy set haslo = '"+newPassOne+"' where login = '"+login+"'";
+
+				try {
+					Future<ArrayList<Map<String, Object>>> record = executeCommandAndWaitForOutput(cmd);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 		btnZmieHaso.setBounds(446, 82, 164, 23);
 		SettingsPanel.add(btnZmieHaso);
 		
