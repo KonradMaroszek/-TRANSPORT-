@@ -1,6 +1,0 @@
-1482774501170	Rename local variable 'insert_cmd'
-1482775777502	Extract method 'get_insert_worker_cmd'
-1482775803026	Extract method 'get_insert_adres_cmd'
-1482775819511	Extract method 'get_insert_data_cmd'
-1482783605668	Rename local variable 'insert_cmd'
-1482791657034	Rename method 'insert_worker_to_db'

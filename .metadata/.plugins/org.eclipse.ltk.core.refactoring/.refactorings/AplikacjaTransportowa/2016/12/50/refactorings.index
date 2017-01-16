@@ -1,7 +1,0 @@
-1480856479310	Extract method 'get_age_from_date'
-1480856781175	Extract method 'setPersonalDataTextFields'
-1480856884679	Extract method 'getSqlCondition'
-1480856947404	Extract method 'executeCommandAndWaitForOutput'
-1480857054457	Rename method 'getSqlCondition'
-1480862410812	Copy packages
-1480862428757	Copy files
