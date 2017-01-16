@@ -71,7 +71,6 @@ import javax.swing.border.BevelBorder;
 
 public class MainWindow {
 	String login;
-	private JTextArea textArea;
 	private int emp_idx;
 	String id_trasy;
 	ArrayList<Map<String, Object>> cars_records;
@@ -2536,7 +2535,7 @@ public class MainWindow {
 		tabbedPane_3.addTab("Informacje", new ImageIcon(MainWindow.class.getResource("/images32x32/user_info-32.png")), panel_11, null);
 		panel_11.setLayout(null);
 		
-		textArea = new JTextArea();
+		JTextArea textArea = new JTextArea();
 		textArea.setBounds(10, 11, 917, 246);
 		panel_11.add(textArea);
 		
@@ -2548,7 +2547,7 @@ public class MainWindow {
 				String nazwisko = kontrahent_nazwisko.getText();
 				String firma = kontrahent_firma.getText();
 				String nip = kontrahent_nip.getText();
-				String cmd = "update dostawy set informacja = '"+info+"' where imie_odbiorcy = '"+imie+"' or nazwisko_odbiorcy = '"+nazwisko+"' or nip = '"+nip+"' or firma = '"+firma+"'";
+				String cmd = "update dostawy set informacje = '"+info+"' where imie_odbiorcy = '"+imie+"' or nazwisko_odbiorcy = '"+nazwisko+"' or nip = '"+nip+"' or firma = '"+firma+"'";
 				insert_to_db(cmd, "", "");
 			}
 		});
@@ -2564,9 +2563,8 @@ public class MainWindow {
 				String nazwisko = kontrahent_nazwisko.getText();
 				String firma = kontrahent_firma.getText();
 				String nip = kontrahent_nip.getText();
-				String cmd = "update dostawy set informacja = '' where imie_odbiorcy = '"+imie+"' or nazwisko_odbiorcy = '"+nazwisko+"' or nip = '"+nip+"' or firma = '"+firma+"'";
+				String cmd = "update dostawy set informacje = '' where imie_odbiorcy = '"+imie+"' or nazwisko_odbiorcy = '"+nazwisko+"' or nip = '"+nip+"' or firma = '"+firma+"'";
 				insert_to_db(cmd, "", "");
-				textArea.setText("");
 			}
 		});
 		panel_11.add(button_9);
@@ -3140,9 +3138,7 @@ public class MainWindow {
 		kontrahent_miasto.setText(record.get("miasto").toString());
 		kontrahent_wojewodztwo.setText(record.get("wojewodztwo").toString());
 		kontrahent_kraj.setText(record.get("kraj").toString());
-		textArea.setText(record.get("informacja").toString());
 	}
-	
 	private Future<ArrayList<Map<String, Object>>> get_personal_data() {
 		String sql_condition = getSqlSearchCondition();
 		String cmd = "select * from dane_osobowe join pracownicy " +

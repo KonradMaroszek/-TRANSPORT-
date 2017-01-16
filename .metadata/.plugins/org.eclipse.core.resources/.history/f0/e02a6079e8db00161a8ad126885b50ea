@@ -71,7 +71,7 @@ import javax.swing.border.BevelBorder;
 
 public class MainWindow {
 	String login;
-	private JTextArea textArea;
+	JTextArea textArea;
 	private int emp_idx;
 	String id_trasy;
 	ArrayList<Map<String, Object>> cars_records;
@@ -2548,7 +2548,7 @@ public class MainWindow {
 				String nazwisko = kontrahent_nazwisko.getText();
 				String firma = kontrahent_firma.getText();
 				String nip = kontrahent_nip.getText();
-				String cmd = "update dostawy set informacja = '"+info+"' where imie_odbiorcy = '"+imie+"' or nazwisko_odbiorcy = '"+nazwisko+"' or nip = '"+nip+"' or firma = '"+firma+"'";
+				String cmd = "update dostawy set informacje = '"+info+"' where imie_odbiorcy = '"+imie+"' or nazwisko_odbiorcy = '"+nazwisko+"' or nip = '"+nip+"' or firma = '"+firma+"'";
 				insert_to_db(cmd, "", "");
 			}
 		});
@@ -2564,9 +2564,8 @@ public class MainWindow {
 				String nazwisko = kontrahent_nazwisko.getText();
 				String firma = kontrahent_firma.getText();
 				String nip = kontrahent_nip.getText();
-				String cmd = "update dostawy set informacja = '' where imie_odbiorcy = '"+imie+"' or nazwisko_odbiorcy = '"+nazwisko+"' or nip = '"+nip+"' or firma = '"+firma+"'";
+				String cmd = "update dostawy set informacje = '' where imie_odbiorcy = '"+imie+"' or nazwisko_odbiorcy = '"+nazwisko+"' or nip = '"+nip+"' or firma = '"+firma+"'";
 				insert_to_db(cmd, "", "");
-				textArea.setText("");
 			}
 		});
 		panel_11.add(button_9);

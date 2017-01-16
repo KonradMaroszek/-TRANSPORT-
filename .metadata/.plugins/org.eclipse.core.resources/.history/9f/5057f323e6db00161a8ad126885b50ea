@@ -71,7 +71,6 @@ import javax.swing.border.BevelBorder;
 
 public class MainWindow {
 	String login;
-	private JTextArea textArea;
 	private int emp_idx;
 	String id_trasy;
 	ArrayList<Map<String, Object>> cars_records;
@@ -2487,8 +2486,7 @@ public class MainWindow {
 			
 			String insert_contractor_cmd = "insert into dostawy (id_dostawy, id_trasy, id_miejsca_docelowego, nr_faktury, imie_odbiorcy, nazwisko_odbiorcy, nip, firma)";
 			insert_contractor_cmd += " values (inf_dostawa.nextval, inf_trasa.nextval, "+id_miejsca+", inf_faktura.nextval, '"+imie+"', '"+nazwisko+"', '"+nip+"', '"+firma+"')";
-			System.out.println(insert_adr);
-			System.out.println(insert_contractor_cmd);
+			
 			insert_to_db(insert_adr,"","");
 			insert_to_db(insert_contractor_cmd,"","");
 			
@@ -2536,39 +2534,16 @@ public class MainWindow {
 		tabbedPane_3.addTab("Informacje", new ImageIcon(MainWindow.class.getResource("/images32x32/user_info-32.png")), panel_11, null);
 		panel_11.setLayout(null);
 		
-		textArea = new JTextArea();
+		JTextArea textArea = new JTextArea();
 		textArea.setBounds(10, 11, 917, 246);
 		panel_11.add(textArea);
 		
 		JButton button_8 = new JButton("Dodaj");
-		button_8.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String info = textArea.getText();
-				String imie = kontrahent_imie.getText();
-				String nazwisko = kontrahent_nazwisko.getText();
-				String firma = kontrahent_firma.getText();
-				String nip = kontrahent_nip.getText();
-				String cmd = "update dostawy set informacja = '"+info+"' where imie_odbiorcy = '"+imie+"' or nazwisko_odbiorcy = '"+nazwisko+"' or nip = '"+nip+"' or firma = '"+firma+"'";
-				insert_to_db(cmd, "", "");
-			}
-		});
 		button_8.setBounds(948, 11, 89, 23);
 		panel_11.add(button_8);
 		
 		JButton button_9 = new JButton("Usu\u0144");
 		button_9.setBounds(948, 45, 89, 23);
-		button_9.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String info = textArea.getText();
-				String imie = kontrahent_imie.getText();
-				String nazwisko = kontrahent_nazwisko.getText();
-				String firma = kontrahent_firma.getText();
-				String nip = kontrahent_nip.getText();
-				String cmd = "update dostawy set informacja = '' where imie_odbiorcy = '"+imie+"' or nazwisko_odbiorcy = '"+nazwisko+"' or nip = '"+nip+"' or firma = '"+firma+"'";
-				insert_to_db(cmd, "", "");
-				textArea.setText("");
-			}
-		});
 		panel_11.add(button_9);
 		
 		JPanel panel_12 = new JPanel();
@@ -3140,9 +3115,7 @@ public class MainWindow {
 		kontrahent_miasto.setText(record.get("miasto").toString());
 		kontrahent_wojewodztwo.setText(record.get("wojewodztwo").toString());
 		kontrahent_kraj.setText(record.get("kraj").toString());
-		textArea.setText(record.get("informacja").toString());
 	}
-	
 	private Future<ArrayList<Map<String, Object>>> get_personal_data() {
 		String sql_condition = getSqlSearchCondition();
 		String cmd = "select * from dane_osobowe join pracownicy " +

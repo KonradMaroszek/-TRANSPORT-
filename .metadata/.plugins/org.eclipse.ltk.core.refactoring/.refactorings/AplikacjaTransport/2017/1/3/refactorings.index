@@ -2,3 +2,5 @@
 1484484592354	Extract method 'set_route_informations'
 1484485525094	Extract method 'find_route'
 1484534876452	Extract method 'ustaw_przypisany_pojazd'
+1484564484849	Rename local variable 'cmd'
+1484568631157	Extract method 'set_contractor_informations'

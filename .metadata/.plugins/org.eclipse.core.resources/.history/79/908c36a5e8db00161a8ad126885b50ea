@@ -2566,7 +2566,6 @@ public class MainWindow {
 				String nip = kontrahent_nip.getText();
 				String cmd = "update dostawy set informacja = '' where imie_odbiorcy = '"+imie+"' or nazwisko_odbiorcy = '"+nazwisko+"' or nip = '"+nip+"' or firma = '"+firma+"'";
 				insert_to_db(cmd, "", "");
-				textArea.setText("");
 			}
 		});
 		panel_11.add(button_9);
