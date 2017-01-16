@@ -245,22 +245,27 @@ public class MainWindow {
 		panelsNames.add("Menu");
 		
 		TabPanel.addTab("Menu g\u0142\u00F3wne", new ImageIcon(MainWindow.class.getResource("/resources/menu.png")), MainMenuPanle, null);
-		MainMenuPanle.setLayout(new MigLayout("", "[][grow]", "[][][]"));
+		MainMenuPanle.setLayout(null);
 		
-		JLabel lblLogin = new JLabel("Login");
-		MainMenuPanle.add(lblLogin, "cell 0 0,alignx trailing");
+		JLabel lblLogin = new JLabel("Login:");
+		lblLogin.setBounds(327, 221, 82, 14);
+		MainMenuPanle.add(lblLogin);
 		
 		loginField = new JTextField();
-		MainMenuPanle.add(loginField, "cell 1 0,growx");
+		loginField.setBounds(432, 218, 347, 20);
+		MainMenuPanle.add(loginField);
 		loginField.setColumns(10);
 		
-		JLabel lblHaso = new JLabel("Has\u0142o");
-		MainMenuPanle.add(lblHaso, "cell 0 1,alignx trailing");
+		JLabel lblHaso = new JLabel("Has\u0142o:");
+		lblHaso.setBounds(327, 252, 82, 14);
+		MainMenuPanle.add(lblHaso);
 		
 		passwordField = new JPasswordField();
-		MainMenuPanle.add(passwordField, "cell 1 1,growx");
+		passwordField.setBounds(432, 249, 347, 20);
+		MainMenuPanle.add(passwordField);
 		
 		JButton btnNewButton_1 = new JButton("Zaloguj");
+		btnNewButton_1.setBounds(496, 276, 120, 23);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// TUTAJ SPRAWDZASZ KTO SIÊ LOGUJE!  
@@ -329,8 +334,15 @@ public class MainWindow {
 				}
 			}
 		});
-		btnNewButton_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		MainMenuPanle.add(btnNewButton_1, "cell 1 2");
+		MainMenuPanle.add(btnNewButton_1);
+		
+		JLabel lblWitajWApliakcji = new JLabel("Witaj w apliakcji \"Transport\". Zaloguj si\u0119 aby kontynuowa\u0107.");
+		lblWitajWApliakcji.setBounds(391, 159, 696, 14);
+		MainMenuPanle.add(lblWitajWApliakcji);
+		
+		JLabel lblJeliNiePosiadasz = new JLabel("Je\u015Bli nie posiadasz konta zg\u0142o\u015B si\u0119 do swoejgo administratora.");
+		lblJeliNiePosiadasz.setBounds(389, 184, 386, 14);
+		MainMenuPanle.add(lblJeliNiePosiadasz);
 		
 		JPanel EmployeesPanel = new JPanel();
 		tabGuardian.addPanelToMap("Pracownicy", EmployeesPanel);
