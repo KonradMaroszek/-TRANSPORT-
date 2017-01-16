@@ -312,7 +312,7 @@ public class MainWindow {
 				HashMap<String, JPanel> panels = tabGuardian.getPanelMap();
 				HashMap<String, ImageIcon> icons = tabGuardian.getIconsMap();
 				
-				UserLogged.setUserType(UserLogged.UserType.ADMIN); // TODO wyrzucic ta linijke i odkomentowac poczatek
+				UserLogged.setUserType(UserLogged.UserType.EMPLOYEE); // TODO wyrzucic ta linijke i odkomentowac poczatek
 				
 				if (UserLogged.getLoggedButton().getText() == "wyloguj")
 				{
@@ -863,7 +863,7 @@ public class MainWindow {
 		JPanel EmployessVehicles = new JPanel();
 		EmployessTabbedPanel.addTab("dost\u0119pne pojazdy", new ImageIcon(MainWindow.class.getResource("/images32x32/pojazd.png")), EmployessVehicles, null);
 		EmployessVehicles.setLayout(null);
-		Hider.addComponentToHiderRestrict("EmployessMainRadioButtonEditMode.getName()", EmployessMainRadioButtonEditMode);
+		
 		JScrollPane EmployesVehiclesScrollPane = new JScrollPane();
 		EmployesVehiclesScrollPane.setBounds(10, 8, 709, 293);
 		EmployessVehicles.add(EmployesVehiclesScrollPane);
@@ -2666,6 +2666,7 @@ public class MainWindow {
 		Hider.addComponentToHider("lblUsuKonto", lblUsuKonto);
 		Hider.addComponentToHider("textField_30", textField_30);
 		Hider.addComponentToHider("btnUsuKonto", btnUsuKonto);
+		Hider.addComponentToHiderRestrict("EmployessMainRadioButtonEditMode.getName()", EmployessMainRadioButtonEditMode);
 		
 			Hider.addComponentToHiderRestrict("btnUsuTrase.getName()", btnUsuTrase);
 		for (JPanel panel : panels.values()){

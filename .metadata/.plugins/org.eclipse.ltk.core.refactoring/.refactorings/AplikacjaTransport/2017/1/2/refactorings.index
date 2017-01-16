@@ -1,0 +1,10 @@
+1484314700304	Copy packages
+1484314713500	Copy files
+1484341459954	Rename local variable 'button_4'
+1484341474723	Rename local variable 'button_5'
+1484342506830	Extract method 'set_employee_informations'
+1484345093066	Extract method 'set_car_informations'
+1484346705128	Extract method 'set_building_informations'
+1484400518655	Rename field 'textField'
+1484425367149	Rename local variable 'scrollPane'
+1484433293655	Rename field 'table'

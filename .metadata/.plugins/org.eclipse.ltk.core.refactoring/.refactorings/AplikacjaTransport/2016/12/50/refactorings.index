@@ -1,0 +1,4 @@
+1480862441734	Delete element
+1480892644802	Extract method 'get_personal_data'
+1480892685935	Extract method 'get_building_data'
+1480892714272	Extract method 'set_building_adress'
