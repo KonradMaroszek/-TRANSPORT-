@@ -20,7 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.JSpinner;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
-
+import Commons.Hider;
 import Commons.TabGuardian;
 import Commons.UserLogged;
 import Database.DatabaseConnection;
@@ -277,7 +277,7 @@ public class MainWindow {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 					
-				// TUTAJ SPRAWDZASZ KTO SIÊ LOGUJE!  
+				// TUTAJ SPRAWDZASZ KTO SIÃŠ LOGUJE!  
 //				String login = loginField.getText();
 //				String password = new String(passwordField.getPassword());
 //				String privilege = "-";
@@ -346,6 +346,9 @@ public class MainWindow {
 						tabPanel.addTab(name, icons.get(name), panels.get(name), null);
 					}
 					
+					Hider.hide();
+					Hider.hideRestrict();
+					
 				}else if (UserLogged.getUserType() == UserLogged.UserType.FORWARDER){
 					panels.remove("Menu");
 					icons.remove("Menu");
@@ -353,8 +356,7 @@ public class MainWindow {
 					panels.remove("Kontrahenci");
 					icons.remove("Kontrahenci");
 					
-					panels.remove("Pracownicy");
-					icons.remove("Pracownicy");
+					Hider.hide();
 					
 					for ( String name : panels.keySet()){
 						tabPanel.addTab(name, icons.get(name), panels.get(name), null);
@@ -439,6 +441,7 @@ public class MainWindow {
 		EmployeesPanel.add(EmployessMainTextNumber);
 		
 		JButton btnNewButton = new JButton("wyszukaj pracownika");
+		Hider.addComponentToHiderRestrict("btnNewButton.getName()", btnNewButton);
 		btnNewButton.setBounds(888, 82, 171, 23);
 		EmployeesPanel.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener(){
@@ -471,6 +474,7 @@ public class MainWindow {
 			
 		});
 		JButton btnDodaj = new JButton("dodaj pracownika");
+		Hider.addComponentToHiderRestrict("btnDodaj.getName()", btnDodaj);
 		btnDodaj.setBounds(888, 124, 171, 23);
 		btnDodaj.addActionListener(new ActionListener() {
 
@@ -558,6 +562,7 @@ public class MainWindow {
 		EmployeesPanel.add(btnDodaj);
 		
 		JButton btnUsu = new JButton("usu\u0144 pracownika");
+		Hider.addComponentToHiderRestrict("btnUsu.getName()", btnUsu);
 		btnUsu.setBounds(888, 166, 171, 23);
 		btnUsu.addActionListener(new ActionListener() {
 
@@ -858,7 +863,7 @@ public class MainWindow {
 		JPanel EmployessVehicles = new JPanel();
 		EmployessTabbedPanel.addTab("dost\u0119pne pojazdy", new ImageIcon(MainWindow.class.getResource("/images32x32/pojazd.png")), EmployessVehicles, null);
 		EmployessVehicles.setLayout(null);
-		
+		Hider.addComponentToHiderRestrict("EmployessMainRadioButtonEditMode.getName()", EmployessMainRadioButtonEditMode);
 		JScrollPane EmployesVehiclesScrollPane = new JScrollPane();
 		EmployesVehiclesScrollPane.setBounds(10, 8, 709, 293);
 		EmployessVehicles.add(EmployesVehiclesScrollPane);
@@ -903,6 +908,7 @@ public class MainWindow {
 		EmployeesPanel.add(EmployessMainRadioButtonEditMode);
 		
 		JButton prev_employee = new JButton("");
+		Hider.addComponentToHiderRestrict("prev_employee.getName()", prev_employee);
 		prev_employee.setIcon(new ImageIcon(MainWindow.class.getResource("/images32x32/leftarrow32.png")));
 		prev_employee.setBounds(773, 11, 144, 35);
 		prev_employee.addActionListener(new ActionListener() {
@@ -943,7 +949,7 @@ public class MainWindow {
 			
 		});
 		EmployeesPanel.add(next_employee);
-		
+		Hider.addComponentToHiderRestrict("next_employee.getName()", next_employee);
 		JPanel VehiclesPanel = new JPanel();
 		tabGuardian.addPanelToMap("Pojazdy", VehiclesPanel);
 		tabGuardian.addIconToMap("Pojazdy", new ImageIcon(MainWindow.class.getResource("/resources/truck.png")));
@@ -1015,6 +1021,7 @@ public class MainWindow {
 		VehiclesPanel.add(VehiclesMainTextFuel);
 		
 		JButton VehiclesMainButtonAdd = new JButton("dodaj pojazd");
+		Hider.addComponentToHiderRestrict("VehiclesMainButtonAdd.getName()", VehiclesMainButtonAdd);
 		VehiclesMainButtonAdd.setBounds(889, 110, 171, 23);
 		VehiclesMainButtonAdd.addActionListener(new ActionListener(){
 
@@ -1099,6 +1106,7 @@ public class MainWindow {
 		VehiclesPanel.add(VehiclesMainButtonAdd);
 		
 		JButton VehiclesMainButtonSearch = new JButton("wyszukaj pojazd");
+		Hider.addComponentToHiderRestrict("VehiclesMainButtonSearch.getName()", VehiclesMainButtonSearch);
 		VehiclesMainButtonSearch.setBounds(889, 68, 171, 23);
 		VehiclesMainButtonSearch.addActionListener(new ActionListener(){
 
@@ -1156,6 +1164,7 @@ public class MainWindow {
 		VehiclesPanel.add(VehiclesMainButtonSearch);
 		
 		JButton VehiclesMainButtonDelete = new JButton("usu\u0144 pojazd");
+			Hider.addComponentToHiderRestrict("VehiclesMainButtonDelete.getName()", VehiclesMainButtonDelete);
 		VehiclesMainButtonDelete.setBounds(889, 152, 171, 23);
 		VehiclesMainButtonDelete.addActionListener(new ActionListener(){
 
@@ -1188,6 +1197,7 @@ public class MainWindow {
 		VehiclesPanel.add(VehiclesMainButtonDelete);
 		
 		JRadioButton VehiclesMainRadioButtonEdit = new JRadioButton("tryb edycji");
+			Hider.addComponentToHiderRestrict("VehiclesMainRadioButtonEdit.getName()", VehiclesMainRadioButtonEdit);
 		VehiclesMainRadioButtonEdit.setBounds(348, 24, 200, 23);
 		VehiclesPanel.add(VehiclesMainRadioButtonEdit);
 		
@@ -2632,6 +2642,32 @@ public class MainWindow {
 		HashMap<String, JPanel> panels = tabGuardian.getPanelMap();
 		panels.remove("Menu");
 		
+			Hider.addComponentToHiderRestrict("btnNewButton_2.getName()", btnNewButton_2);
+			Hider.addComponentToHiderRestrict("btnNastpny.getName()", btnNastpny);
+			Hider.addComponentToHiderRestrict("InstytutionMainRadioButtonEdit.getName()", InstytutionMainRadioButtonEdit);
+		Hider.addComponentToHiderRestrict("InstytutionMainButtonDelete.getName()", InstytutionMainButtonDelete);
+		Hider.addComponentToHiderRestrict("InstytutionMainButtonAdd.getName()", InstytutionMainButtonAdd);
+			Hider.addComponentToHiderRestrict("InstytutionMainButtonSearch.getName()", InstytutionMainButtonSearch);
+			Hider.addComponentToHiderRestrict("button_2.getName()", button_2);
+		Hider.addComponentToHiderRestrict("button_3.getName()", button_3);
+		Hider.addComponentToHiderRestrict("btnDodajTrase.getName()", btnDodajTrase);
+		Hider.addComponentToHiderRestrict("radioButton.getName()", radioButton);
+		Hider.addComponentToHider("button_17", button_17);
+		Hider.addComponentToHider("passwordField_4", passwordField_4);
+		Hider.addComponentToHider("label_31", label_31);
+		Hider.addComponentToHider("label_40", label_40);
+		Hider.addComponentToHider("passwordField_5", passwordField_5);
+		Hider.addComponentToHider("textField_29", textField_29);
+		Hider.addComponentToHider("label_41", label_41);
+		Hider.addComponentToHider("label_42", label_42);
+			Hider.addComponentToHider("lblTypKonta.getName()", lblTypKonta);
+		Hider.addComponentToHider("comboBox", comboBox);
+		Hider.addComponentToHider("label_43", label_43);
+		Hider.addComponentToHider("lblUsuKonto", lblUsuKonto);
+		Hider.addComponentToHider("textField_30", textField_30);
+		Hider.addComponentToHider("btnUsuKonto", btnUsuKonto);
+		
+			Hider.addComponentToHiderRestrict("btnUsuTrase.getName()", btnUsuTrase);
 		for (JPanel panel : panels.values()){
 			tabPanel.remove(panel);
 		}
