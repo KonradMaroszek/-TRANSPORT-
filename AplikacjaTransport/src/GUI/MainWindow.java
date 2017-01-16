@@ -170,8 +170,6 @@ public class MainWindow {
 	private JPasswordField passwordField_1;
 	private JPasswordField passwordField_2;
 	private JPasswordField passwordField_3;
-	private JPasswordField passwordField_4;
-	private JPasswordField passwordField_5;
 	private JTextField textField_29;
 	private JTextField textField_30;
 	private JTextField textField_31;
@@ -196,6 +194,7 @@ public class MainWindow {
 	private JTextField model_pojazdu;
 	private JTextField ladownosc_pojazdu;
 	private JTextField przypisz_samochod;
+	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -313,7 +312,7 @@ public class MainWindow {
 				HashMap<String, JPanel> panels = tabGuardian.getPanelMap();
 				HashMap<String, ImageIcon> icons = tabGuardian.getIconsMap();
 				
-				UserLogged.setUserType(UserLogged.UserType.EMPLOYEE); // TODO wyrzucic ta linijke i odkomentowac poczatek
+				UserLogged.setUserType(UserLogged.UserType.ADMIN); // TODO wyrzucic ta linijke i odkomentowac poczatek
 				
 				if (UserLogged.getLoggedButton().getText() == "wyloguj")
 				{
@@ -2617,25 +2616,30 @@ public class MainWindow {
 		passwordField_3.setBounds(157, 83, 254, 20);
 		SettingsPanel.add(passwordField_3);
 		
-		JButton button_17 = new JButton("Za\u0142\u00F3\u017C konto");
-		button_17.setBounds(446, 232, 164, 23);
-		SettingsPanel.add(button_17);
-		
-		passwordField_4 = new JPasswordField();
-		passwordField_4.setBounds(157, 208, 254, 20);
-		SettingsPanel.add(passwordField_4);
-		
-		JLabel label_31 = new JLabel("Powt\u00F3rz has\u0142o pocz\u0105tkowe:");
-		label_31.setBounds(10, 211, 137, 14);
-		SettingsPanel.add(label_31);
-		
-		JLabel label_40 = new JLabel("Has\u0142o pocz\u0105tkowe:");
-		label_40.setBounds(10, 186, 137, 14);
-		SettingsPanel.add(label_40);
-		
-		passwordField_5 = new JPasswordField();
-		passwordField_5.setBounds(157, 180, 254, 20);
-		SettingsPanel.add(passwordField_5);
+		JButton btnZmieTyp = new JButton("Zmie\u0144 typ");
+		btnZmieTyp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String lg = textField_29.getText();
+				String type = textField.getText();
+				
+				if (type != "EMPLOYEE" && type != "ADMIN" && type != "FORWARDER")
+				{
+					JOptionPane.showMessageDialog(null,"Nie ma takiej opcji.","B³¹d!",JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
+				String cmd = "update pracownicy set uprawnienia = '"+type+"'where login = '"+lg+"'";
+				
+				try {
+					Future<ArrayList<Map<String, Object>>> record = executeCommandAndWaitForOutput(cmd);;
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		btnZmieTyp.setBounds(446, 182, 164, 23);
+		SettingsPanel.add(btnZmieTyp);
 		
 		textField_29 = new JTextField();
 		textField_29.setColumns(10);
@@ -2646,33 +2650,44 @@ public class MainWindow {
 		label_41.setBounds(10, 161, 137, 14);
 		SettingsPanel.add(label_41);
 		
-		JLabel label_42 = new JLabel("Nowe konto:");
-		label_42.setBounds(10, 136, 137, 14);
-		SettingsPanel.add(label_42);
+		JLabel lblEdytujUprawnienia = new JLabel("Edytuj uprawnienia:");
+		lblEdytujUprawnienia.setBounds(10, 136, 137, 14);
+		SettingsPanel.add(lblEdytujUprawnienia);
 		
 		JLabel lblTypKonta = new JLabel("Typ konta:");
-		lblTypKonta.setBounds(10, 236, 137, 14);
+		lblTypKonta.setBounds(10, 186, 137, 14);
 		SettingsPanel.add(lblTypKonta);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(157, 233, 254, 20);
-		SettingsPanel.add(comboBox);
-		
 		JLabel label_43 = new JLabel("Login:");
-		label_43.setBounds(10, 333, 137, 14);
+		label_43.setBounds(10, 260, 137, 14);
 		SettingsPanel.add(label_43);
 		
 		JLabel lblUsuKonto = new JLabel("Usu\u0144 konto:");
-		lblUsuKonto.setBounds(10, 308, 137, 14);
+		lblUsuKonto.setBounds(10, 235, 137, 14);
 		SettingsPanel.add(lblUsuKonto);
 		
 		textField_30 = new JTextField();
 		textField_30.setColumns(10);
-		textField_30.setBounds(157, 330, 254, 20);
+		textField_30.setBounds(157, 257, 254, 20);
 		SettingsPanel.add(textField_30);
 		
 		JButton btnUsuKonto = new JButton("Usu\u0144 konto");
-		btnUsuKonto.setBounds(446, 329, 164, 23);
+		btnUsuKonto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String lg = textField_30.getText();
+				
+				String cmd = "delete from pracownicy where login = '"+lg+"'";
+				
+				try {
+					Future<ArrayList<Map<String, Object>>> record = executeCommandAndWaitForOutput(cmd);
+					JOptionPane.showMessageDialog(null,"U¿ytkownik usuniety lub nie istnia³ w bazie danych!","Powodzenie!",JOptionPane.WARNING_MESSAGE);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		btnUsuKonto.setBounds(446, 256, 164, 23);
 		SettingsPanel.add(btnUsuKonto);
 		tabGuardian.addIconToMap("Ustawienia", new ImageIcon(MainWindow.class.getResource("/resources/ustawienia.png")));
 		panelsNames.add("Ustawienia");
@@ -2690,20 +2705,21 @@ public class MainWindow {
 		//Hider.addComponentToHiderRestrict("button_3.getName()", button_3);
 		Hider.addComponentToHiderRestrict("btnDodajTrase.getName()", btnDodajTrase);
 		Hider.addComponentToHiderRestrict("radioButton.getName()", radioButton);
-		Hider.addComponentToHider("button_17", button_17);
-		Hider.addComponentToHider("passwordField_4", passwordField_4);
-		Hider.addComponentToHider("label_31", label_31);
-		Hider.addComponentToHider("label_40", label_40);
-		Hider.addComponentToHider("passwordField_5", passwordField_5);
+		Hider.addComponentToHider("button_17", btnZmieTyp);
 		Hider.addComponentToHider("textField_29", textField_29);
 		Hider.addComponentToHider("label_41", label_41);
-		Hider.addComponentToHider("label_42", label_42);
+		Hider.addComponentToHider("label_42", lblEdytujUprawnienia);
 			Hider.addComponentToHider("lblTypKonta.getName()", lblTypKonta);
-		Hider.addComponentToHider("comboBox", comboBox);
 		Hider.addComponentToHider("label_43", label_43);
 		Hider.addComponentToHider("lblUsuKonto", lblUsuKonto);
 		Hider.addComponentToHider("textField_30", textField_30);
 		Hider.addComponentToHider("btnUsuKonto", btnUsuKonto);
+		
+		textField = new JTextField();
+		Hider.addComponentToHiderRestrict("textField.getName()", textField);
+		textField.setColumns(10);
+		textField.setBounds(157, 183, 254, 20);
+		SettingsPanel.add(textField);
 		Hider.addComponentToHiderRestrict("EmployessMainRadioButtonEditMode.getName()", EmployessMainRadioButtonEditMode);
 		
 			Hider.addComponentToHiderRestrict("btnUsuTrase.getName()", btnUsuTrase);
