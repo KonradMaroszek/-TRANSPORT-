@@ -21,4 +21,5 @@
 <fullyQualifiedTypeName name="Commons.UserLogged"/>
 <fullyQualifiedTypeName name="Commons.UserLogged.UserType"/>
 <fullyQualifiedTypeName name="javax.swing.ImageIcon"/>
+<fullyQualifiedTypeName name="javax.swing.table.DefaultTableModel"/>
 </qualifiedTypeNameHistroy>

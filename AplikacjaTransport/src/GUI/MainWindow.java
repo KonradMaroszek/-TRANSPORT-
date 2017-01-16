@@ -194,6 +194,7 @@ public class MainWindow {
 	private JTextField marka_pojazdu;
 	private JTextField model_pojazdu;
 	private JTextField ladownosc_pojazdu;
+	private JTextField przypisz_samochod;
 
 	/**
 	 * Launch the application.
@@ -490,15 +491,17 @@ public class MainWindow {
 						System.out.println("Couldnt add employee");
 					}
 					String insert_worker_cmd = get_insert_worker_cmd(typ_umowy, adr_id, building_id, car_id, worker_id,
-							data_id);
+							data_id, nazwisko);
 					String insert_adres_cmd = get_insert_adres_cmd(ulica, nr_lokalu, kod_pocztowy, miasto, wojewodztwo,
 							kraj, adr_id);
 					String insert_data_cmd = get_insert_data_cmd(imie, nazwisko, drugie_imie, data_ur, nr_tel, pesel,
 							nr_dowodu, data_id);
-					System.out.println(insert_worker_cmd);
+					
 					System.out.println(insert_adres_cmd);
 					System.out.println(insert_data_cmd);
-					insert_to_db(insert_worker_cmd, insert_adres_cmd, insert_data_cmd);
+					System.out.println(insert_worker_cmd);
+					insert_to_db(insert_adres_cmd, insert_data_cmd, "");
+					insert_to_db(insert_worker_cmd, "", "");
 				}
 				else
 				{
@@ -548,7 +551,7 @@ public class MainWindow {
 					String del_adr_cmd = "delete from adresy where id_adresu = "+id_adr;
 					String del_dane_cmd = "delete from dane_osobowe where id_danych_osobowych = "+id_danych;
 					String del_pracownik_cmd = "delete from pracownicy where id_pracownika = "+id_pracownika;
-					insert_to_db(del_pracownik_cmd, del_adr_cmd, del_dane_cmd);
+					insert_to_db(del_pracownik_cmd, "", "");
 					
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
@@ -747,6 +750,48 @@ public class MainWindow {
 		JTextArea EmployessPersonalDataTextAreaExtraInformation = new JTextArea();
 		EmployessPersonalDataTextAreaExtraInformation.setBounds(665, 45, 372, 238);
 		EmployessPersonalData.add(EmployessPersonalDataTextAreaExtraInformation);
+		
+		przypisz_samochod = new JTextField();
+		przypisz_samochod.setColumns(10);
+		przypisz_samochod.setBounds(251, 293, 190, 20);
+		EmployessPersonalData.add(przypisz_samochod);
+		
+		JLabel lblSamochdmarkaModel = new JLabel("Samoch\u00F3d (marka model nr_rejestracyjny):");
+		lblSamochdmarkaModel.setBounds(10, 293, 265, 20);
+		EmployessPersonalData.add(lblSamochdmarkaModel);
+		
+		JButton btnPrzypiszPojazd = new JButton("Przypisz pojazd");
+		btnPrzypiszPojazd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String marka = przypisz_samochod.getText().split(" ")[0];
+				String model = przypisz_samochod.getText().split(" ")[1];
+				String nr_rej = przypisz_samochod.getText().split(" ")[2];
+
+				String imie = EmployessPersonalDataTextName.getText();
+				String nazwisko = EmployessPersonalDataTextSurname.getText();
+				String pesel = EmployessPersonalDataTextPeselNumber.getText();
+				String get_employee_cmd = "Select pracownicy.id_pracownika from pracownicy join dane_osobowe on pracownicy.id_danych_osobowych = dane_osobowe.id_danych_osobowych where imie = '"+imie+"' and nazwisko = '"+nazwisko+"' and pesel = '"+pesel+"'";
+				try {
+					
+					String pracownik_id = executeCommandAndWaitForOutput(get_employee_cmd).get().get(0).get("id_pracownika").toString();
+					String get_pojazd_id = "Select pojazdy.id_pojazdu from pojazdy join karty_techniczne_pojazdow on pojazdy.id_pojazdu = karty_techniczne_pojazdow.id_pojazdu join dowody_rejestracyjne on pojazdy.id_pojazdu = dowody_rejestracyjne.id_pojazdu where marka = '"+marka+"' and model = '"+model+"' and nr_rejestracyjny = '"+nr_rej+"'";
+					String id_pojazdu = executeCommandAndWaitForOutput(get_pojazd_id).get().get(0).get("id_pojazdu").toString();
+					String update_cmd = "Update pracownicy set id_pojazdu = "+id_pojazdu+" where id_pracownika = "+pracownik_id;
+					System.out.println(update_cmd);
+					insert_to_db(update_cmd, "", "");
+					ustaw_przypisany_pojazd(id_pojazdu);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ExecutionException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnPrzypiszPojazd.setBounds(459, 288, 141, 21);
+		EmployessPersonalData.add(btnPrzypiszPojazd);
 		
 		JPanel EmployessCurrentTask = new JPanel();
 		EmployessTabbedPanel.addTab("aktualne zadnie", new ImageIcon(MainWindow.class.getResource("/images32x32/zadanie.png")), EmployessCurrentTask, null);
@@ -1021,7 +1066,8 @@ public class MainWindow {
 					System.out.println(insert_pojazd_cmd);
 					System.out.println(insert_dowod_cmd);
 					System.out.println(insert_karta_cmd);
-					insert_to_db(insert_pojazd_cmd, insert_karta_cmd, insert_dowod_cmd);
+					insert_to_db(insert_pojazd_cmd, "", "");
+					insert_to_db(insert_karta_cmd, insert_dowod_cmd, "");
 				}
 				else System.out.println("Car already exists.");
 				
@@ -2274,11 +2320,12 @@ public class MainWindow {
 				String insert_adr = get_insert_adres_cmd(ulica, nr_lokalu, kod_pocztowy_dostawy, start_miasto.getText(), wojewodztwo_dostawy, kraj_dostawy, adr_id);
  
 				String dostawa_insert_cmd = "insert into dostawy (towary, rzeczywisty_czas_dostarczenia, id_dostawy, id_trasy, id_miejsca_docelowego, nr_faktury, imie_odbiorcy, nazwisko_odbiorcy) ";
-				dostawa_insert_cmd += "values ("+Towary+", "+czas_dostarczenia+", dostawa_id_seq.nextval, "+id_trasy+", "+adr_id+", "+nr_faktury+", "+odbiorca_imie+", "+odbiorca_nazwisko+")";
+				dostawa_insert_cmd += "values ('"+Towary+"', TO_DATE('"+czas_dostarczenia+"', 'yyyy-mm-dd'), dostawa_id_seq.nextval, "+id_trasy+", "+adr_id+", "+nr_faktury+", '"+odbiorca_imie+"', '"+odbiorca_nazwisko+"')";
 				
 				insert_to_db(insert_adr, "", "");
 				insert_to_db(dostawa_insert_cmd, "", "");
-
+				System.out.println(insert_adr);
+				System.out.println(dostawa_insert_cmd);
 //				"Czas dostarczenia", "Towary", "Adres dostawy", "Odbiorca"
 				
 				model.addRow(new Object[] {null, null, null ,null, null});
@@ -2290,6 +2337,15 @@ public class MainWindow {
 		JButton button_4 = new JButton("Usun dostawe");
 		button_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				DefaultTableModel model = (DefaultTableModel) dostawy_tab.getModel();
+				int row_nr = dostawy_tab.getSelectedRow();
+				String czas_dostarczenia = model.getValueAt(row_nr, 0).toString();
+				String Towary = model.getValueAt(row_nr, 1).toString();
+				String Odbiorca = model.getValueAt(row_nr, 3).toString();
+				String delete_dostawa = "delete from dostawy where rzeczywisty_czas_dostarczenia = TO_DATE('"+czas_dostarczenia+"', 'yyyy-mm-dd') and ";
+				delete_dostawa += " towary = '"+Towary+"' and imie_odbiorcy = '"+Odbiorca.split(" ")[0]+"' and nazwisko_odbiorcy = '"+Odbiorca.split(" ")[1]+"'";
+				insert_to_db(delete_dostawa, "", "");
+				model.removeRow(row_nr);
 			}
 		});
 		button_4.setBounds(948, 374, 111, 23);
@@ -2645,6 +2701,26 @@ public class MainWindow {
 		Future<ArrayList<Map<String, Object>>> result2 = get_building_data(output);
 		setPersonalDataTextFields(output);
 		set_building_adress(result2);
+		String id_pojazdu = output.get("id_pojazdu").toString();
+		ustaw_przypisany_pojazd(id_pojazdu);
+	}
+
+	private void ustaw_przypisany_pojazd(String id_pojazdu) throws InterruptedException, ExecutionException {
+		DefaultTableModel model = new DefaultTableModel();
+		model.addColumn("Marka");
+		model.addColumn("Model");
+		model.addColumn("Rocznik");
+		model.addColumn("Ladownosc");
+		model.addColumn("Spalanie");
+		model.addColumn("Masa wlasna");
+		
+		String cmd = "Select marka, model, rok_produkcji, max_ladownosc, spalanie, masa_wlasna ";
+		cmd += "from pojazdy join karty_techniczne_pojazdow on pojazdy.id_pojazdu = karty_techniczne_pojazdow.id_pojazdu join dowody_rejestracyjne on pojazdy.id_pojazdu = dowody_rejestracyjne.id_pojazdu ";
+		cmd += "where pojazdy.id_pojazdu = "+id_pojazdu;
+		Map<String, Object> pojazd = executeCommandAndWaitForOutput(cmd).get().get(0);
+		
+		model.addRow(new Object[] {pojazd.get("marka").toString(), pojazd.get("model").toString(), pojazd.get("rok_produkcji").toString(), pojazd.get("max_ladownosc").toString(), pojazd.get("spalanie").toString(), pojazd.get("masa_wlasna").toString()});
+		employes_vehicles_table.setModel(model);
 	}
 	private Future<ArrayList<Map<String, Object>>> find_route() {
 		String czas_trwania = czas_trwania_trasy.getText();
@@ -2738,16 +2814,31 @@ public class MainWindow {
 		ladownosc_pojazdu.setText(pojazd.get("max_ladownosc").toString());
 		String get_dostawy_cmd = "Select * from dostawy where id_trasy = "+id_trasy;
 		ArrayList<Map<String, Object>> dostawy = executeCommandAndWaitForOutput(get_dostawy_cmd).get();
-		DefaultTableModel model = (DefaultTableModel) dostawy_tab.getModel();
+		DefaultTableModel model = new DefaultTableModel();
+		model.addColumn("Czas dostarczenia");
+		model.addColumn("Towary");
+		model.addColumn("Adres dostawy");
+		model.addColumn("Odbiorca");
+		model.addColumn("Nr_faktury");
+		
+		try {
+			for(int i = 0; i< model.getRowCount() - 1; i++) model.removeRow(0);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		for (Map<String, Object> dostawa : dostawy)
 		{
 			String get_adr_dostawy_cmd = "Select ulica, nr_lokalu from adresy where id_adresu = "+dostawa.get("id_miejsca_docelowego").toString();
 			
 			Map<String, Object> adr_dostawy = executeCommandAndWaitForOutput(get_adr_dostawy_cmd).get().get(0);
-			model.addRow(new Object[] {dostawa.get("rzeczywisty_czas_dostarczenia").toString(), dostawa.get("towary").toString(),
-					""+adr_dostawy.get("ulica").toString()+" "+adr_dostawy.get("nr_lokalu").toString(), ""+dostawa.get("imie_odbiorcy").toString()+" "+dostawa.get("nazwisko_odbiorcy").toString() });
+			model.addRow(new Object[] {dostawa.get("rzeczywisty_czas_dostarczenia").toString().split(" ")[0], dostawa.get("towary").toString(),
+					""+adr_dostawy.get("ulica").toString()+" "+adr_dostawy.get("nr_lokalu").toString(), ""+dostawa.get("imie_odbiorcy").toString()+" "+dostawa.get("nazwisko_odbiorcy").toString(), dostawa.get("nr_faktury").toString() });
 //			"Czas dostarczenia", "Towary", "Adres dostawy", "Odbiorca"
 		}
+		
+		model.addRow(new Object[] {null, null, null, null, null});
+		dostawy_tab.setModel(model);
 	}
 	private void set_car_informations(Map<String, Object> car) {
 		VehiclesMainTextFuel.setText(car.get("spalanie").toString());
@@ -2857,10 +2948,10 @@ public class MainWindow {
 	}
 
 	private String get_insert_worker_cmd(String typ_umowy, String adr_id, String building_id, String car_id,
-			String worker_id, String data_id) {
+			String worker_id, String data_id, String credentials) {
 		String insert_worker_cmd = "";
-		insert_worker_cmd += "insert into pracownicy (id_budynku, id_pojazdu, id_adresu, id_pracownika, id_danych_osobowych, typ_umowy_o_prace, stanowisko) ";
-		insert_worker_cmd += "values (" + building_id + ", " + car_id + ", " + adr_id + ", " + worker_id + ", " + data_id + ", '" + typ_umowy + "', 'Pracownik')";
+		insert_worker_cmd += "insert into pracownicy (id_budynku, id_pojazdu, id_adresu, id_pracownika, id_danych_osobowych, typ_umowy_o_prace, stanowisko, login, haslo, uprawnienia) ";
+		insert_worker_cmd += "values (" + building_id + ", " + car_id + ", " + adr_id + ", " + worker_id + ", " + data_id + ", '" + typ_umowy + "', 'Pracownik', '"+credentials+"', '"+credentials+"', 'Employee')";
 		return insert_worker_cmd;
 	}
 	private String getSqlSearchCondition() {
