@@ -114,7 +114,6 @@ public class MainWindow {
 	private JTextField textField_37;
 	private JTextField textField_38;
 	private JTextField textField_39;
-	private JTable EmployessCalendarTable;
 	private JTextField VehiclesMainTextCapacity;
 	private JTextField VehiclesInformationTextTopSpeed;
 	private JTextField VehiclesInformationTextChassisNumber;
@@ -760,13 +759,17 @@ public class MainWindow {
 		lblPostp.setBounds(10, 28, 46, 14);
 		EmployessCurrentTask.add(lblPostp);
 		
+		JLabel lblKomentarz = new JLabel("Komentarz:");
+		lblKomentarz.setBounds(363, 28, 119, 14);
+		EmployessCurrentTask.add(lblKomentarz);
+		
+		JTextPane textPane = new JTextPane();
+		textPane.setBounds(363, 54, 639, 201);
+		EmployessCurrentTask.add(textPane);
+		
 		JPanel EmployessVehicles = new JPanel();
 		EmployessTabbedPanel.addTab("dost\u0119pne pojazdy", new ImageIcon(MainWindow.class.getResource("/images32x32/pojazd.png")), EmployessVehicles, null);
 		EmployessVehicles.setLayout(null);
-		
-		JButton EmployessVehiclesButtonDetails = new JButton("Szczeg\u00F3\u0142y...");
-		EmployessVehiclesButtonDetails.setBounds(870, 11, 167, 23);
-		EmployessVehicles.add(EmployessVehiclesButtonDetails);
 		
 		JScrollPane EmployesVehiclesScrollPane = new JScrollPane();
 		EmployesVehiclesScrollPane.setBounds(10, 8, 709, 293);
@@ -788,10 +791,6 @@ public class MainWindow {
 		EmployessTabbedPanel.addTab("historia zada\u0144", new ImageIcon(MainWindow.class.getResource("/images32x32/zegarhistoria.png")), EmployessTasksHistory, null);
 		EmployessTasksHistory.setLayout(null);
 		
-		JButton EmployessTasksHistoryButtonDetails = new JButton("Szczeg\u00F3\u0142y...");
-		EmployessTasksHistoryButtonDetails.setBounds(870, 11, 167, 23);
-		EmployessTasksHistory.add(EmployessTasksHistoryButtonDetails);
-		
 		JScrollPane EmployeesTaskHistoryScrollPane = new JScrollPane();
 		EmployeesTaskHistoryScrollPane.setBounds(26, 38, 680, 247);
 		EmployessTasksHistory.add(EmployeesTaskHistoryScrollPane);
@@ -810,26 +809,6 @@ public class MainWindow {
 		EmployeesTaskHistoryTable.getColumnModel().getColumn(2).setPreferredWidth(105);
 		EmployeesTaskHistoryTable.getColumnModel().getColumn(3).setPreferredWidth(119);
 		EmployeesTaskHistoryScrollPane.setViewportView(EmployeesTaskHistoryTable);
-		
-		JPanel EmployessCalendar = new JPanel();
-		EmployessTabbedPanel.addTab("kalendarz pracy", new ImageIcon(MainWindow.class.getResource("/images32x32/kalendarz.png")), EmployessCalendar, null);
-		EmployessCalendar.setLayout(null);
-		
-		EmployessCalendarTable = new JTable();
-		EmployessCalendarTable.setBounds(10, 11, 859, 293);
-		EmployessCalendar.add(EmployessCalendarTable);
-		
-		JButton button_14 = new JButton("Szczeg\u00F3\u0142y...");
-		button_14.setBounds(870, 11, 167, 23);
-		EmployessCalendar.add(button_14);
-		
-		JButton button_15 = new JButton("Szczeg\u00F3\u0142y...");
-		button_15.setBounds(870, 45, 167, 23);
-		EmployessCalendar.add(button_15);
-		
-		JButton button_16 = new JButton("Szczeg\u00F3\u0142y...");
-		button_16.setBounds(870, 79, 167, 23);
-		EmployessCalendar.add(button_16);
 		
 		JRadioButton EmployessMainRadioButtonEditMode = new JRadioButton("tryb edycji");
 		EmployessMainRadioButtonEditMode.setBounds(347, 38, 200, 23);
@@ -1287,10 +1266,6 @@ public class MainWindow {
 		tabbedPane_1.addTab("Naprawy", new ImageIcon(MainWindow.class.getResource("/images32x32/Mechanikas.png")), panel_6, null);
 		panel_6.setLayout(null);
 		
-		JButton button = new JButton("Szczeg\u00F3\u0142y...");
-		button.setBounds(870, 11, 167, 23);
-		panel_6.add(button);
-		
 		JScrollPane naprawyScrollPane = new JScrollPane();
 		naprawyScrollPane.setBounds(10, 14, 452, 294);
 		panel_6.add(naprawyScrollPane);
@@ -1312,10 +1287,6 @@ public class MainWindow {
 		JPanel panel_7 = new JPanel();
 		tabbedPane_1.addTab("Trasy", new ImageIcon(MainWindow.class.getResource("/images32x32/road-map-icon-1.png")), panel_7, null);
 		panel_7.setLayout(null);
-		
-		JButton button_1 = new JButton("Szczeg\u00F3\u0142y...");
-		button_1.setBounds(870, 11, 167, 23);
-		panel_7.add(button_1);
 		
 		JScrollPane VehicleRoutesScrollPane = new JScrollPane();
 		VehicleRoutesScrollPane.setBounds(27, 24, 465, 284);
@@ -1788,23 +1759,12 @@ public class MainWindow {
 		tabbedPane_2.setEnabledAt(2, true);
 		panel_10.setLayout(null);
 		
-		
-		
-		
-		JButton InstytutionEmployeesButtonDetails = new JButton("Szczeg\u00F3\u0142y...");
-		InstytutionEmployeesButtonDetails.setBounds(870, 11, 167, 23);
-		panel_10.add(InstytutionEmployeesButtonDetails);
-		
 		JButton InstytutionEmployeesButtonAdd = new JButton("Dodaj");
-		InstytutionEmployeesButtonAdd.setBounds(870, 45, 167, 23);
+		InstytutionEmployeesButtonAdd.setBounds(870, 14, 167, 23);
 		panel_10.add(InstytutionEmployeesButtonAdd);
 		
-		JButton InstytutionEmployeesButtonEdit = new JButton("Edytuj");
-		InstytutionEmployeesButtonEdit.setBounds(870, 79, 167, 23);
-		panel_10.add(InstytutionEmployeesButtonEdit);
-		
 		JButton InstytutionEmployeesButtonDelete = new JButton("Usu\u0144");
-		InstytutionEmployeesButtonDelete.setBounds(870, 113, 167, 23);
+		InstytutionEmployeesButtonDelete.setBounds(870, 48, 167, 23);
 		panel_10.add(InstytutionEmployeesButtonDelete);
 										
 		JScrollPane InstytutionEmployeesScrollPane = new JScrollPane();
@@ -2164,7 +2124,7 @@ public class MainWindow {
 		
 		JScrollPane routeScrollPane = new JScrollPane();
 		routeScrollPane.setViewportBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		routeScrollPane.setBounds(360, 337, 578, 407);
+		routeScrollPane.setBounds(360, 337, 555, 407);
 		RoutePanel.add(routeScrollPane);
 		
 		dostawy_tab = new JTable();
@@ -2244,7 +2204,7 @@ public class MainWindow {
 		lbladownoPojazdu.setBounds(10, 584, 110, 17);
 		RoutePanel.add(lbladownoPojazdu);
 		
-		JButton btnDodajDostawe = new JButton("Dodaj dostawe");
+		JButton btnDodajDostawe = new JButton("dodaj dostawe");
 		btnDodajDostawe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				DefaultTableModel model = (DefaultTableModel) dostawy_tab.getModel();
@@ -2284,16 +2244,16 @@ public class MainWindow {
 				model.addRow(new Object[] {null, null, null ,null, null});
 			}
 		});
-		btnDodajDostawe.setBounds(948, 340, 111, 23);
+		btnDodajDostawe.setBounds(925, 340, 134, 23);
 		RoutePanel.add(btnDodajDostawe);
 		
-		JButton button_4 = new JButton("Usun dostawe");
-		button_4.addActionListener(new ActionListener() {
+		JButton btnUsuDostawe = new JButton("usu\u0144 dostawe");
+		btnUsuDostawe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		button_4.setBounds(948, 374, 111, 23);
-		RoutePanel.add(button_4);
+		btnUsuDostawe.setBounds(925, 374, 134, 23);
+		RoutePanel.add(btnUsuDostawe);
 		
 		JPanel ContractorsPanel = new JPanel();
 		tabGuardian.addPanelToMap("Kontrahenci", ContractorsPanel);
@@ -2374,10 +2334,6 @@ public class MainWindow {
 		button_9.setBounds(948, 45, 89, 23);
 		panel_11.add(button_9);
 		
-		JButton button_10 = new JButton("Edytuj");
-		button_10.setBounds(948, 82, 89, 23);
-		panel_11.add(button_10);
-		
 		JPanel panel_12 = new JPanel();
 		tabbedPane_3.addTab("Faktury", new ImageIcon(MainWindow.class.getResource("/images32x32/faktura.png")), panel_12, null);
 		panel_12.setLayout(null);
@@ -2386,17 +2342,9 @@ public class MainWindow {
 		btnDodaj_1.setBounds(948, 11, 89, 23);
 		panel_12.add(btnDodaj_1);
 		
-		JButton btnPodgld = new JButton("Podgl\u0105d");
-		btnPodgld.setBounds(948, 116, 89, 23);
-		panel_12.add(btnPodgld);
-		
 		JButton btnUsu_1 = new JButton("Usu\u0144");
 		btnUsu_1.setBounds(948, 45, 89, 23);
 		panel_12.add(btnUsu_1);
-		
-		JButton btnEdytuj = new JButton("Edytuj");
-		btnEdytuj.setBounds(948, 82, 89, 23);
-		panel_12.add(btnEdytuj);
 		
 		JScrollPane Faktury_scrollPane = new JScrollPane();
 		Faktury_scrollPane.setBounds(10, 11, 523, 246);
